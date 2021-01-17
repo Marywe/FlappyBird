@@ -16,8 +16,6 @@
 #include <basics/opengles/Context>
 #include <basics/opengles/Canvas_ES2>
 #include <basics/opengles/OpenGL_ES2>
-
-#include "Sample_Scene.hpp"
 #include "Intro_Scene.hpp"
 
 using namespace basics;

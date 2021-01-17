@@ -13,8 +13,6 @@
 #include <basics/Canvas>
 #include <basics/Director>
 
-#include "Sample_Scene.hpp"
-
 using namespace basics;
 using namespace std;
 

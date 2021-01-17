@@ -1,6 +1,5 @@
 #include "Menu_Scene.hpp"
 #include "Game_Scene.hpp"
-#include "Sample_Scene.hpp"
 
 #include <basics/Canvas>
 #include <basics/Director>
@@ -40,7 +39,7 @@ namespace example
         {
             switch (event.id)
             {
-                case ID(touch-started):         // El usuario toca la pantalla
+                case ID(touch-started):
                 case ID(touch-moved):
                 {
                     // Se determina qué opción se ha tocado:
@@ -71,7 +70,7 @@ namespace example
 
                     if (option_at (touch_location) == PLAY)
                     {
-                        director.run_scene (shared_ptr< Scene >(new Sample_Scene));
+                        director.run_scene (shared_ptr< Scene >(new Game_Scene));
                     }
 
                     break;
