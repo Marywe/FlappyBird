@@ -160,7 +160,7 @@ namespace example
 
             state = FINISHED;
 
-            director.run_scene (shared_ptr< Scene >(new Sample_Scene));
+            director.run_scene (shared_ptr< Scene >(new Menu_Scene));
 
         }
     }
