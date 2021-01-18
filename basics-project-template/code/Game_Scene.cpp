@@ -35,6 +35,9 @@ namespace example
         x         = 640;
         y         = 360;
 
+        bgx = 1280/2;
+        bgy = 768/2;
+
         return true;
     }
 
@@ -89,15 +92,13 @@ namespace example
             if (canvas)
             {
                 canvas->clear        ();
-                canvas->set_color    (1, 1, 1);
-                canvas->draw_point   ({ 360, 360 });
-                canvas->draw_segment ({   0,   0 }, { 1280, 720 });
-                canvas->draw_segment ({   0, 720 }, { 1280,   0 });
 
+                if(backgorund) canvas->fill_rectangle ({ bgx, bgy }, { 768*2, 1280 }, backgorund.get ());
                 if (texture)
                 {
                     canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
                 }
+
             }
         }
     }
@@ -111,10 +112,13 @@ namespace example
             if (context)
             {
                 texture = Texture_2D::create (ID(test), context, "test.png");
+                backgorund = Texture_2D::create (ID(bg), context, "fondo.png");
 
-                if (texture)
+
+                if (texture && backgorund)
                 {
                     context->add (texture);
+                    context->add(backgorund);
 
                     state = RUNNING;
                 }
@@ -122,7 +126,7 @@ namespace example
         }
     }
 
-    void Game_Scene::run (float )
+    void Game_Scene::run (float dT)
     {
     }
 

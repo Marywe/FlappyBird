@@ -36,6 +36,9 @@ namespace example
         unsigned       canvas_height;
 
         Texture_Handle texture;
+        Texture_Handle backgorund;
+
+        float bgx, bgy;
         float          x, y;
 
     public:

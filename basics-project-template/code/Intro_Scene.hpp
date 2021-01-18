@@ -93,6 +93,7 @@ namespace example
         /**
          * Este método lo invoca Director automáticamente cuando el juego pasa a primer plano.
          */
+
         void resume () override
         {
             suspended = false;
