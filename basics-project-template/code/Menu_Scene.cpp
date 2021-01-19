@@ -8,7 +8,7 @@
 using namespace basics;
 using namespace std;
 
-namespace example
+namespace flappyfish
 {
 
     Menu_Scene::Menu_Scene()
@@ -83,12 +83,15 @@ namespace example
 
     void Menu_Scene::update (float time)
     {
-        if (!suspended) if (state == LOADING)
+        if (!suspended) if (state == LOADING) if(!font)
             {
                 Graphics_Context::Accessor context = director.lock_graphics_context ();
 
                 if (context)
                 {
+                    font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
+
+
                     // Se carga el atlas:
 
                     atlas.reset (new Atlas("menu-scene/main-menu.sprites", context));
@@ -132,6 +135,18 @@ namespace example
 
                 if (state == READY)
                 {
+                    if(font){
+                        Text_Layout sample_text(*font, L"sample");
+
+                        canvas->draw_text ({          0.f,           0.f }, sample_text, BOTTOM | LEFT );
+                        canvas->draw_text ({          0.f, canvas_height }, sample_text,    TOP | LEFT );
+                        canvas->draw_text ({ canvas_width,           0.f }, sample_text, BOTTOM | RIGHT);
+                        canvas->draw_text ({ canvas_width, canvas_height }, sample_text,    TOP | RIGHT);
+                    }
+
+
+
+
                     // Se dibuja el slice de cada una de las opciones del menú:
 
                     for (auto & option : options)

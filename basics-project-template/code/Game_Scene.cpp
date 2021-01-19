@@ -19,7 +19,7 @@
 using namespace basics;
 using namespace std;
 
-namespace example
+namespace flappyfish
 {
 
     Game_Scene::Game_Scene()

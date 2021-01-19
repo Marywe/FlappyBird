@@ -19,7 +19,7 @@
 #include "Intro_Scene.hpp"
 
 using namespace basics;
-using namespace example;
+using namespace flappyfish;
 using namespace std;
 
 int main ()

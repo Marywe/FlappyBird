@@ -16,7 +16,7 @@
 using namespace basics;
 using namespace std;
 
-namespace example
+namespace flappyfish
 {
 
     // ---------------------------------------------------------------------------------------------

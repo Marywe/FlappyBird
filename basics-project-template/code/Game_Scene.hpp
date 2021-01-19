@@ -12,7 +12,7 @@
 #include <basics/Scene>
 #include <basics/Texture_2D>
 
-namespace example
+namespace flappyfish
 {
 
     class Game_Scene : public basics::Scene

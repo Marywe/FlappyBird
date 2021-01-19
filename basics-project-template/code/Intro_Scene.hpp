@@ -17,7 +17,7 @@
 #include <basics/Texture_2D>
 #include <basics/Timer>
 
-namespace example
+namespace flappyfish
 {
 
     using basics::Timer;
