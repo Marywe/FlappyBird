@@ -1,5 +1,5 @@
 /*
- * SAMPLE SCENE
+ * INTRO SCENE
  * Copyright © 2018+ Ángel Rodríguez Ballesteros
  *
  * Distributed under the Boost Software License, version  1.0
@@ -62,8 +62,8 @@ namespace flappyfish
         {
             state         = UNINITIALIZED;
             suspended     = true;
-            canvas_width  = 1280;
-            canvas_height =  720;
+            canvas_width  = 720;
+            canvas_height =  1280;
         }
 
         /**
@@ -76,39 +76,20 @@ namespace flappyfish
             return { canvas_width, canvas_height };
         }
 
-        /**
-         * Aquí se inicializan los atributos que deben restablecerse cada vez que se inicia la escena.
-         * @return
-         */
         bool initialize () override;
 
-        /**
-         * Este método lo invoca Director automáticamente cuando el juego pasa a segundo plano.
-         */
         void suspend () override
         {
             suspended = true;
         }
-
-        /**
-         * Este método lo invoca Director automáticamente cuando el juego pasa a primer plano.
-         */
 
         void resume () override
         {
             suspended = false;
         }
 
-        /**
-         * Este método se invoca automáticamente una vez por fotograma para que la escena
-         * actualize su estado.
-         */
         void update (float time) override;
 
-        /**
-         * Este método se invoca automáticamente una vez por fotograma para que la escena
-         * dibuje su contenido.
-         */
         void render (Graphics_Context::Accessor & context) override;
 
     private:

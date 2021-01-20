@@ -1,5 +1,5 @@
 /*
- * SAMPLE SCENE
+ * INTRO SCENE
  * Copyright © 2018+ Ángel Rodríguez Ballesteros
  *
  * Distributed under the Boost Software License, version  1.0
@@ -18,9 +18,6 @@ using namespace std;
 
 namespace flappyfish
 {
-
-    // ---------------------------------------------------------------------------------------------
-
     bool Intro_Scene::initialize ()
     {
         if (state == UNINITIALIZED)

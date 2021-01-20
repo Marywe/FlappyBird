@@ -1,5 +1,5 @@
 /*
- * SAMPLE SCENE
+ * GAME SCENE
  * Copyright © 2018+ Ángel Rodríguez Ballesteros
  *
  * Distributed under the Boost Software License, version  1.0
@@ -40,6 +40,8 @@ namespace flappyfish
 
         float bgx, bgy;
         float          x, y;
+
+        const int BGSPEED = 20;
 
     public:
 

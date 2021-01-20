@@ -1,5 +1,5 @@
 /*
- * SAMPLE SCENE
+ * GAME SCENE
  * Copyright © 2018+ Ángel Rodríguez Ballesteros
  *
  * Distributed under the Boost Software License, version  1.0
@@ -24,8 +24,8 @@ namespace flappyfish
 
     Game_Scene::Game_Scene()
     {
-        canvas_width  = 1280;
-        canvas_height =  720;
+        canvas_width  = 720;
+        canvas_height =  1280;
     }
 
     bool Game_Scene::initialize ()
@@ -36,7 +36,7 @@ namespace flappyfish
         y         = 360;
 
         bgx = 1280/2;
-        bgy = 768/2;
+        bgy = 1280/2;
 
         return true;
     }
@@ -93,7 +93,7 @@ namespace flappyfish
             {
                 canvas->clear        ();
 
-                if(backgorund) canvas->fill_rectangle ({ bgx, bgy }, { 768*2, 1280 }, backgorund.get ());
+                if(backgorund) canvas->fill_rectangle ({ bgx, bgy }, {1280 , 1280 }, backgorund.get ());
                 if (texture)
                 {
                     canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
@@ -128,6 +128,15 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
+        //Mover fondo poco a poco
+        bgx -= dT*BGSPEED;
+
+
+        //Mover tuberías más rápido
+
+
     }
+
+
 
 }

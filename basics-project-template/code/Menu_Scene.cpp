@@ -1,9 +1,20 @@
+/*
+ * MENU SCENE
+ * Copyright © 2018+ Ángel Rodríguez Ballesteros
+ *
+ * Distributed under the Boost Software License, version  1.0
+ * See documents/LICENSE.TXT or www.boost.org/LICENSE_1_0.txt
+ *
+ * angel.rodriguez@esne.edu
+ */
+
 #include "Menu_Scene.hpp"
 #include "Game_Scene.hpp"
 
 #include <basics/Canvas>
 #include <basics/Director>
 #include <basics/Transformation>
+//#include <basics/Raster_Font>
 
 using namespace basics;
 using namespace std;
@@ -15,8 +26,8 @@ namespace flappyfish
     {
         state         = LOADING;
         suspended     = true;
-        canvas_width  = 1280;
-        canvas_height =  720;
+        canvas_width  = 720;
+        canvas_height =  1280;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -83,13 +94,13 @@ namespace flappyfish
 
     void Menu_Scene::update (float time)
     {
-        if (!suspended) if (state == LOADING) if(!font)
+        if (!suspended) if (state == LOADING) //if(!font)
             {
                 Graphics_Context::Accessor context = director.lock_graphics_context ();
 
                 if (context)
                 {
-                    font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
+                   // font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
 
 
                     // Se carga el atlas:
@@ -135,14 +146,14 @@ namespace flappyfish
 
                 if (state == READY)
                 {
-                    if(font){
-                        Text_Layout sample_text(*font, L"sample");
+                    //if(font){
+                      //  Text_Layout sample_text(*font, L"sample");
 
-                        canvas->draw_text ({          0.f,           0.f }, sample_text, BOTTOM | LEFT );
-                        canvas->draw_text ({          0.f, canvas_height }, sample_text,    TOP | LEFT );
-                        canvas->draw_text ({ canvas_width,           0.f }, sample_text, BOTTOM | RIGHT);
-                        canvas->draw_text ({ canvas_width, canvas_height }, sample_text,    TOP | RIGHT);
-                    }
+                        //canvas->draw_text ({          0.f,           0.f }, sample_text, BOTTOM | LEFT );
+                        //canvas->draw_text ({          0.f, canvas_height }, sample_text,    TOP | LEFT );
+                        //canvas->draw_text ({ canvas_width,           0.f }, sample_text, BOTTOM | RIGHT);
+                        //canvas->draw_text ({ canvas_width, canvas_height }, sample_text,    TOP | RIGHT);
+                    //}
 
 
 

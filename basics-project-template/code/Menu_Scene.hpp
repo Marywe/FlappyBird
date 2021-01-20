@@ -1,3 +1,13 @@
+/*
+ * MENU SCENE
+ * Copyright © 2018+ Ángel Rodríguez Ballesteros
+ *
+ * Distributed under the Boost Software License, version  1.0
+ * See documents/LICENSE.TXT or www.boost.org/LICENSE_1_0.txt
+ *
+ * angel.rodriguez@esne.edu
+ */
+
 #ifndef MENU_SCENE_HEADER
 #define MENU_SCENE_HEADER
 
@@ -8,7 +18,7 @@
 #include <basics/Scene>
 #include <basics/Size>
 #include <basics/Timer>
-#include <basics/Raster_Font>
+//#include <basics/Raster_Font>
 
 namespace flappyfish
 {
@@ -64,8 +74,8 @@ namespace flappyfish
         std::unique_ptr< Atlas > atlas;                     ///< Atlas que contiene las imágenes de las opciones del menú
 
 
-        typedef std::unique_ptr< basics::Raster_Font> Font_Handle;
-        Font_Handle font;
+        //typedef std::unique_ptr< basics::Raster_Font> Font_Handle;
+        //Font_Handle font;
 
     public:
 
