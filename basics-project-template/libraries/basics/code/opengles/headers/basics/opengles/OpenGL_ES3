@@ -1,4 +1,0 @@
-
-#pragma once
-
-#include "internal/OpenGL_ES3.hpp"

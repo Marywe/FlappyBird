@@ -1,4 +1,0 @@
-
-#pragma once
-
-#include "internal/Graphics_Resource_Cache.hpp"
