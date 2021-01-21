@@ -38,10 +38,10 @@ namespace flappyfish
         Texture_Handle texture;
         Texture_Handle backgorund;
 
-        float bgx, bgy;
+        float bgx, bgy, bg2x;
         float          x, y;
 
-        const int BGSPEED = 20;
+        const int BGSPEED = 10;
 
     public:
 

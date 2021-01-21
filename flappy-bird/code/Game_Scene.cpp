@@ -32,11 +32,16 @@ namespace flappyfish
     {
         state     = LOADING;
         suspended = false;
-        x         = 640;
-        y         = 360;
 
+        //Moñeco
+        x         = 100;
+        y         = canvas_height/2;
+
+        //Fondo
         bgx = 1280/2;
         bgy = 1280/2;
+        bg2x = bgx+1280;
+
 
         return true;
     }
@@ -93,11 +98,12 @@ namespace flappyfish
             {
                 canvas->clear        ();
 
-                if(backgorund) canvas->fill_rectangle ({ bgx, bgy }, {1280 , 1280 }, backgorund.get ());
-                if (texture)
-                {
-                    canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
+                if(backgorund) {
+                    canvas->fill_rectangle ({ bgx, bgy }, {1280 , 1280 }, backgorund.get ());
+                    canvas->fill_rectangle ({ bg2x, bgy }, {1280 , 1280 }, backgorund.get ());
                 }
+                if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
+
 
             }
         }
@@ -130,10 +136,14 @@ namespace flappyfish
     {
         //Mover fondo poco a poco
         bgx -= dT*BGSPEED;
+        bg2x -= dT*BGSPEED;
+
+        //Cuando los sprites del bg se salen de la pantalla +5px se recolocan
+        if(bgx + (1280/2) + 5 < 0) bgx = bg2x + 1280;
+        else if(bg2x + (1280/2) + 5 < 0) bg2x = bgx + 1280;
 
 
         //Mover tuberías más rápido
-
 
     }
 
