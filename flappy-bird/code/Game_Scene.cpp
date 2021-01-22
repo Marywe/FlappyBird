@@ -63,13 +63,15 @@ namespace flappyfish
             switch (event.id)
             {
                 case ID(touch-started):
-                case ID(touch-moved):
-                case ID(touch-ended):
                 {
-                    x = *event[ID(x)].as< var::Float > ();
-                    y = *event[ID(y)].as< var::Float > ();
+                    yForce = 7;
                     break;
                 }
+                case ID(touch-moved):
+                case ID(touch-ended):{
+                    break;
+                }
+
             }
         }
     }
@@ -134,6 +136,12 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
+        //Movimiento en Y del pez
+        yForce -= GRAVITY * dT;
+        y += yForce;
+
+
+
         //Mover fondo poco a poco
         bgx -= dT*BGSPEED;
         bg2x -= dT*BGSPEED;

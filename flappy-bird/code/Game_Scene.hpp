@@ -40,8 +40,10 @@ namespace flappyfish
 
         float bgx, bgy, bg2x;
         float          x, y;
+        float yForce;
 
         const int BGSPEED = 10;
+        static constexpr float GRAVITY = 9.8f;
 
     public:
 
