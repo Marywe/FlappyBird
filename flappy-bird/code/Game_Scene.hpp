@@ -35,12 +35,14 @@ namespace flappyfish
         unsigned       canvas_width;
         unsigned       canvas_height;
 
+        bool hasStartedPlaying;
+
         Texture_Handle texture;
         Texture_Handle backgorund;
 
-        float bgx, bgy, bg2x;
+        float          bgx, bgy, bg2x;
         float          x, y;
-        float yForce;
+        float          yForce;
 
         const int BGSPEED = 10;
         static constexpr float GRAVITY = 9.8f;

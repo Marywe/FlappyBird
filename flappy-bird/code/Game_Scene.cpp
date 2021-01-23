@@ -33,6 +33,8 @@ namespace flappyfish
         state     = LOADING;
         suspended = false;
 
+        hasStartedPlaying = false;
+
         //Moñeco
         x         = 100;
         y         = canvas_height/2;
@@ -64,7 +66,9 @@ namespace flappyfish
             {
                 case ID(touch-started):
                 {
-                    yForce = 7;
+                    if(!hasStartedPlaying) hasStartedPlaying = true;
+
+                    yForce = 5;
                     break;
                 }
                 case ID(touch-moved):
@@ -81,7 +85,7 @@ namespace flappyfish
         switch (state)
         {
             case LOADING: load ();     break;
-            case RUNNING: run  (time); break;
+            case RUNNING: if(hasStartedPlaying) run  (time); break;
         }
     }
 
@@ -100,7 +104,8 @@ namespace flappyfish
             {
                 canvas->clear        ();
 
-                if(backgorund) {
+                if(backgorund) //Dibuja los fondos uno tras otro
+                {
                     canvas->fill_rectangle ({ bgx, bgy }, {1280 , 1280 }, backgorund.get ());
                     canvas->fill_rectangle ({ bg2x, bgy }, {1280 , 1280 }, backgorund.get ());
                 }
@@ -136,22 +141,22 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
-        //Movimiento en Y del pez
+        //Movimiento en Y del pez con gravedad
         yForce -= GRAVITY * dT;
-        y += yForce;
+        y += yForce * 1.5f;
 
 
 
-        //Mover fondo poco a poco
+        //Se mueve el fondo poco a poco
         bgx -= dT*BGSPEED;
         bg2x -= dT*BGSPEED;
 
-        //Cuando los sprites del bg se salen de la pantalla +5px se recolocan
+        //Cuando los sprites del bg se salen de la pantalla +5px, se recolocan
         if(bgx + (1280/2) + 5 < 0) bgx = bg2x + 1280;
         else if(bg2x + (1280/2) + 5 < 0) bg2x = bgx + 1280;
 
 
-        //Mover tuberías más rápido
+        //Se mueven las tuberías más rápido
 
     }
 

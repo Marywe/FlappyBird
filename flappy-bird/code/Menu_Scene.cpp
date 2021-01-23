@@ -94,12 +94,13 @@ namespace flappyfish
 
     void Menu_Scene::update (float time)
     {
-        if (!suspended) if (state == LOADING) //if(!font)
+        if (!suspended) if (state == LOADING) if(!font)
             {
                 Graphics_Context::Accessor context = director.lock_graphics_context ();
 
                 if (context)
                 {
+                    //Se carga la fuente
                     font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
 
 
@@ -109,7 +110,7 @@ namespace flappyfish
 
                     // Si el atlas se ha podido cargar el estado es READY y, en otro caso, es ERROR:
 
-                    state = atlas->good () ? READY : ERROR;
+                    state = atlas->good () && font->good() ? READY : ERROR;
 
                     // Si el atlas está disponible, se inicializan los datos de las opciones del menú:
 
@@ -143,11 +144,13 @@ namespace flappyfish
             if (canvas)
             {
                 canvas->clear ();
+                canvas->set_color(0,0,1);
 
                 if (state == READY)
                 {
                     if(font)
                     {
+
                         Text_Layout sample_text(*font, L"sample");
                         canvas->draw_text({0.f, 0.f}, sample_text, BOTTOM | LEFT);
                         canvas->draw_text({0.f, canvas_height}, sample_text, TOP | LEFT);
