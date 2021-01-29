@@ -12,8 +12,10 @@
 #include <basics/Scene>
 #include <basics/Texture_2D>
 
+
 namespace flappyfish
 {
+    using basics::Point2f;
 
     class Game_Scene : public basics::Scene
     {
@@ -27,6 +29,7 @@ namespace flappyfish
         {
             LOADING,
             RUNNING,
+            PAUSED
         };
 
         State          state;
@@ -38,7 +41,9 @@ namespace flappyfish
         bool hasStartedPlaying;
 
         Texture_Handle texture;
-        Texture_Handle backgorund;
+        Texture_Handle background;
+        Texture_Handle pipesTexture;
+
 
         float          bgx, bgy, bg2x;
         float          x, y;
@@ -46,6 +51,13 @@ namespace flappyfish
 
         const int BGSPEED = 10;
         static constexpr float GRAVITY = 9.8f;
+
+        struct Pipes {
+            Point2f pos;
+            bool up = true;
+        };
+        const int PIPESPEED = 50;
+        Pipes pipes1, pipes2, pipes3;
 
     public:
 
@@ -68,6 +80,7 @@ namespace flappyfish
 
         void load ();
         void run  (float time);
+        void gameOver ();
 
     };
 

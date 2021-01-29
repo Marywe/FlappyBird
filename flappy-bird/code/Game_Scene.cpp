@@ -44,6 +44,10 @@ namespace flappyfish
         bgy = 1280/2;
         bg2x = bgx+1280;
 
+        //Tuberías
+        pipes1.pos = {canvas_width/2, canvas_height/2};
+
+
 
         return true;
     }
@@ -86,6 +90,7 @@ namespace flappyfish
         {
             case LOADING: load ();     break;
             case RUNNING: if(hasStartedPlaying) run  (time); break;
+            case PAUSED: gameOver(); break;
         }
     }
 
@@ -104,13 +109,13 @@ namespace flappyfish
             {
                 canvas->clear        ();
 
-                if(backgorund) //Dibuja los fondos uno tras otro
+                if(background) //Dibuja los fondos uno tras otro
                 {
-                    canvas->fill_rectangle ({ bgx, bgy }, {1280 , 1280 }, backgorund.get ());
-                    canvas->fill_rectangle ({ bg2x, bgy }, {1280 , 1280 }, backgorund.get ());
+                    canvas->fill_rectangle ({ bgx, bgy }, {1280 , 1280 }, background.get ());
+                    canvas->fill_rectangle ({ bg2x, bgy }, {1280 , 1280 }, background.get ());
                 }
                 if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
-
+                if (pipesTexture) canvas->fill_rectangle ({ pipes1.pos}, {100, 100 }, pipesTexture.get ());
 
             }
         }
@@ -124,14 +129,15 @@ namespace flappyfish
 
             if (context)
             {
-                texture = Texture_2D::create (ID(test), context, "test.png");
-                backgorund = Texture_2D::create (ID(bg), context, "fondo.png");
+                texture = Texture_2D::create (ID(test), context, "game-scene/test.png");
+                background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
+                pipesTexture = Texture_2D::create (ID(pipes), context, "game-scene/Pipes.png");
 
-
-                if (texture && backgorund)
+                if (texture && background && pipesTexture)
                 {
                     context->add (texture);
-                    context->add(backgorund);
+                    context->add(background);
+                    context->add(pipesTexture);
 
                     state = RUNNING;
                 }
@@ -157,6 +163,19 @@ namespace flappyfish
 
 
         //Se mueven las tuberías más rápido
+        pipes1.pos.coordinates.x() -=dT*PIPESPEED;
+
+
+
+
+        //Comprobación Game Over
+        if( y < 50) state = PAUSED;
+
+    }
+
+    void Game_Scene::gameOver()
+    {
+
 
     }
 
