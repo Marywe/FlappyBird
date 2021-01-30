@@ -8,6 +8,8 @@
 #include <basics/Scene>
 #include <basics/Texture_2D>
 #include <basics/Atlas>
+#include <basics/Canvas>
+
 
 
 namespace flappyfish
@@ -17,7 +19,7 @@ namespace flappyfish
 
     class Game_Scene : public basics::Scene
     {
-
+        typedef std::unique_ptr< basics::Atlas       > Atlas_Handle;
         typedef std::shared_ptr< basics::Texture_2D > Texture_Handle;
 
     public:
@@ -41,7 +43,7 @@ namespace flappyfish
         Texture_Handle texture;
         Texture_Handle background;
         Texture_Handle pipesTexture;
-
+        Atlas_Handle atlas;
 
         float          bgx, bgy, bg2x;
         float          x, y;
@@ -80,6 +82,7 @@ namespace flappyfish
         void load ();
         void run  (float time);
         void gameOver ();
+        void draw_slice (basics::Canvas * canvas, const basics::Point2f & where, basics::Atlas & atlas, basics::Id slice_id);
 
     };
 

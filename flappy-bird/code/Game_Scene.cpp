@@ -35,13 +35,13 @@ namespace flappyfish
         y         = canvas_height/2;
 
         //Fondo
-        bgx = 1280/2;
-        bgy = 1280/2;
-        bg2x = bgx+1280;
+        bgx         = 1280/2;
+        bgy         = 1280/2;
+        bg2x        = bgx + 1280;
 
         //Tuberías
         pipes1.pos = {canvas_width/2, canvas_height/2};
-
+        pipes2.pos = pipes1.pos;
 
 
         return true;
@@ -106,11 +106,12 @@ namespace flappyfish
 
                 if(background) //Dibuja los fondos uno tras otro
                 {
-                    canvas->fill_rectangle ({ bgx, bgy }, {1280 , 1280 }, background.get ());
-                    canvas->fill_rectangle ({ bg2x, bgy }, {1280 , 1280 }, background.get ());
+                    canvas->fill_rectangle ({ bgx, bgy },   {background->get_width() , background->get_height() }, background.get ());
+                    canvas->fill_rectangle ({ bg2x, bgy },  {background->get_width() , background->get_height() }, background.get ());
                 }
                 if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
-                if (pipesTexture) canvas->fill_rectangle ({ pipes1.pos}, {100, 100 }, pipesTexture.get ());
+                if (pipesTexture) canvas->fill_rectangle ({ pipes1.pos }, {100, 100 }, pipesTexture.get ());
+                draw_slice (canvas, { canvas_width/2, canvas_height/2}, *atlas, ID(pipedown) );
 
             }
         }
@@ -128,7 +129,9 @@ namespace flappyfish
                 background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
                 pipesTexture = Texture_2D::create (ID(pipes), context, "game-scene/Pipes.png");
 
-                if (texture && background && pipesTexture)
+                atlas.reset (new Atlas("pipes.sprites", context));
+
+                if (texture && background && pipesTexture && atlas->good())
                 {
                     context->add (texture);
                     context->add(background);
@@ -145,7 +148,6 @@ namespace flappyfish
         //Movimiento en Y del pez con gravedad
         yForce -= GRAVITY * dT;
         y += yForce * 1.5f;
-
 
 
         //Se mueve el fondo poco a poco
@@ -173,6 +175,15 @@ namespace flappyfish
 
     }
 
+    void Game_Scene::draw_slice (Canvas * canvas, const basics::Point2f & where, basics::Atlas & atlas, basics::Id slice_id)
+    {
+        const Atlas::Slice * slice = atlas.get_slice (slice_id);
+
+        if (slice)
+        {
+            canvas->fill_rectangle (where, { slice->width, slice->height }, slice);
+        }
+    }
 
 
 }
