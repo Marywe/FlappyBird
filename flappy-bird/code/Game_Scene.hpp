@@ -1,21 +1,19 @@
 /*
  * GAME SCENE
- * Copyright © 2018+ Ángel Rodríguez Ballesteros
- *
- * Distributed under the Boost Software License, version  1.0
- * See documents/LICENSE.TXT or www.boost.org/LICENSE_1_0.txt
- *
- * angel.rodriguez@esne.edu
+ * Copyright © 2020+ María López Ausín
+ * @version 1.0.0
  */
 
 #include <memory>
 #include <basics/Scene>
 #include <basics/Texture_2D>
+#include <basics/Atlas>
 
 
 namespace flappyfish
 {
     using basics::Point2f;
+    using basics::Atlas;
 
     class Game_Scene : public basics::Scene
     {
@@ -55,6 +53,7 @@ namespace flappyfish
         struct Pipes {
             Point2f pos;
             bool up = true;
+            const Atlas::Slice * slice;
         };
         const int PIPESPEED = 50;
         Pipes pipes1, pipes2, pipes3;

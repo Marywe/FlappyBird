@@ -1,11 +1,7 @@
 /*
  * INTRO SCENE
- * Copyright © 2018+ Ángel Rodríguez Ballesteros
- *
- * Distributed under the Boost Software License, version  1.0
- * See documents/LICENSE.TXT or www.boost.org/LICENSE_1_0.txt
- *
- * angel.rodriguez@esne.edu
+ * Copyright © 2020+ María López Ausín
+ * @version 1.0.0
  */
 
 #include "Intro_Scene.hpp"
@@ -54,8 +50,6 @@ namespace flappyfish
     {
         if (!suspended)
         {
-            // El canvas se puede haber creado previamente, en cuyo caso solo hay que pedirlo:
-
             Canvas * canvas = context->get_renderer< Canvas > (ID(canvas));
 
             // Si no se ha creado previamente, hay que crearlo una vez:
@@ -78,7 +72,7 @@ namespace flappyfish
                     canvas->fill_rectangle
                             (
                                     { canvas_width * .5f, canvas_height * .5f },
-                                    { logo_texture->get_width (), logo_texture->get_height () },
+                                    { logo_texture->get_width ()*0.9f, logo_texture->get_height () *0.9f},
                                     logo_texture. get ()
                             );
                 }

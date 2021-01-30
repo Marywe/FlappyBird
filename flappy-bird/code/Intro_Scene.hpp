@@ -1,11 +1,7 @@
 /*
  * INTRO SCENE
- * Copyright © 2018+ Ángel Rodríguez Ballesteros
- *
- * Distributed under the Boost Software License, version  1.0
- * See documents/LICENSE.TXT or www.boost.org/LICENSE_1_0.txt
- *
- * angel.rodriguez@esne.edu
+ * Copyright © 2020+ María López Ausín
+ * @version 1.0.0
  */
 
 #ifndef INTRO_SCENE_HEADER
@@ -27,10 +23,6 @@ namespace flappyfish
 
     class Intro_Scene : public basics::Scene
     {
-
-        /**
-         * Representa el estado de la escena en su conjunto.
-         */
         enum State
         {
             UNINITIALIZED,

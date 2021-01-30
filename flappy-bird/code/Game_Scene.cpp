@@ -1,17 +1,12 @@
 /*
  * GAME SCENE
- * Copyright © 2018+ Ángel Rodríguez Ballesteros
- *
- * Distributed under the Boost Software License, version  1.0
- * See documents/LICENSE.TXT or www.boost.org/LICENSE_1_0.txt
- *
- * angel.rodriguez@esne.edu
+ * Copyright © 2020+ María López Ausín
+ * @version 1.0.0
  */
 
 #include "Game_Scene.hpp"
 #include <basics/Canvas>
 #include <basics/Director>
-#include <basics/Log>
 #include <basics/Scaling>
 #include <basics/Rotation>
 #include <basics/Translation>
@@ -164,7 +159,6 @@ namespace flappyfish
 
         //Se mueven las tuberías más rápido
         pipes1.pos.coordinates.x() -=dT*PIPESPEED;
-
 
 
 
