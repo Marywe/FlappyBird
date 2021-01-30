@@ -23,7 +23,6 @@ namespace flappyfish
 
     public:
 
-
         enum State
         {
             LOADING,
@@ -55,11 +54,14 @@ namespace flappyfish
 
         struct Pipes {
             Point2f pos;
-            bool up = true;
             const Atlas::Slice * slice;
         };
         const int PIPESPEED = 100;
-        Pipes pipes1, pipes2, pipes3;
+        static constexpr float DISTANCEUP = 100;
+        static constexpr float DISTANCEX = 200;
+
+
+        Pipes PD1, PD2, PD3, PU1, PU2, PU3;
 
     public:
 
@@ -85,6 +87,10 @@ namespace flappyfish
         void gameOver ();
         void draw_slice (basics::Canvas * canvas, const basics::Point2f & where, basics::Atlas & atlas, basics::Id slice_id);
 
+        inline float random_Y_pos (const float previous_Y) ///< Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
+        {
+            return std::max(200.0f, std::min( previous_Y + rand() % -200 + 200 , 1080.0f)); ///< Clamp entre dos valores para que no se salga en Y de la pantalla
+        }
     };
 
 }

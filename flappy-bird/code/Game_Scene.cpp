@@ -40,9 +40,9 @@ namespace flappyfish
         bg2x        = bgx + 1280;
 
         //Tuberías
-        pipes1.pos = {canvas_width/2, canvas_height/2};
-        pipes2.pos = pipes1.pos;
-
+        PD1.pos = {canvas_width, canvas_height / 2};
+        PD2.pos = PD1.pos;
+        PD3.pos = PD2.pos;
 
         return true;
     }
@@ -66,12 +66,7 @@ namespace flappyfish
                 case ID(touch-started):
                 {
                     if(!hasStartedPlaying) hasStartedPlaying = true;
-
                     yForce = 5;
-                    break;
-                }
-                case ID(touch-moved):
-                case ID(touch-ended):{
                     break;
                 }
             }
@@ -109,7 +104,7 @@ namespace flappyfish
                     canvas->fill_rectangle ({ bg2x, bgy },  {background->get_width() , background->get_height() }, background.get ());
                 }
                 if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
-                if (pipesTexture) canvas->fill_rectangle ({ pipes1.pos }, {pipesTexture->get_width(), pipesTexture->get_height() }, pipesTexture.get ());
+                if (pipesTexture) canvas->fill_rectangle ({ PD1.pos }, {pipesTexture->get_width(), pipesTexture->get_height() }, pipesTexture.get ());
 
                 draw_slice (canvas, { canvas_width/2, canvas_height/2}, *atlas, ID(pipedown) );
                 draw_slice (canvas, { canvas_width*0.25f, canvas_height*0.5f}, *atlas, ID(pipeup) );
@@ -158,26 +153,45 @@ namespace flappyfish
     void Game_Scene::run (float dT)
     {
         //Movimiento en Y del pez con gravedad
-        yForce -= GRAVITY * dT;
-        y += yForce * 1.5f;
+        yForce  -= GRAVITY * dT;
+        y       += yForce * 1.5f;
 
 
         //Se mueve el fondo poco a poco
-        bgx -= dT*BGSPEED;
-        bg2x -= dT*BGSPEED;
+        bgx     -= dT*BGSPEED;
+        bg2x    -= dT*BGSPEED;
 
         //Cuando los sprites del bg se salen de la pantalla +5px, se recolocan
-        if(bgx + (1280/2) + 5 < 0) bgx = bg2x + 1280;
-        else if(bg2x + (1280/2) + 5 < 0) bg2x = bgx + 1280;
+        if      (bgx + background->get_width()/2 + 5 < 0)               bgx = bg2x + background->get_width();
+        else if (bg2x + background->get_width()/2 + 5 < 0)              bg2x = bgx + background->get_width();
 
 
         //Se mueven las tuberías más rápido
-        pipes1.pos.coordinates.x() -=dT*PIPESPEED;
+        PD1.pos.coordinates.x() -= dT * PIPESPEED;
+        PD2.pos.coordinates.x() -= dT * PIPESPEED;
+        PD3.pos.coordinates.x() -= dT * PIPESPEED;
+        PU1.pos.coordinates.x() -= dT * PIPESPEED;
+        PU2.pos.coordinates.x() -= dT * PIPESPEED;
+        PU3.pos.coordinates.x() -= dT * PIPESPEED;
 
+        //Al salirse de la pantalla, se pone tras la última             ///<Mas width
+        if      (PD1.pos.coordinates.x() +5 < 0 )
+        {
+            PD1.pos.coordinates = {PD3.pos.coordinates.x() + DISTANCEX, random_Y_pos(PD3.pos.coordinates.y())};
+        }
+        else if (PD2.pos.coordinates.x() +5 < 0 )
+        {
+            PD2.pos.coordinates = {PD1.pos.coordinates.x() + DISTANCEX, random_Y_pos(PD1.pos.coordinates.y())};
+
+        }
+        else if (PD3.pos.coordinates.x() +5 < 0 )
+        {
+            PD3.pos.coordinates = {PD2.pos.coordinates.x() + DISTANCEX, random_Y_pos(PD2.pos.coordinates.y())};
+        }
 
 
         //Comprobación Game Over
-        if( y < 50) state = PAUSED;
+        if (y < 0) state = PAUSED;
 
     }
 
@@ -196,6 +210,4 @@ namespace flappyfish
             canvas->fill_rectangle (where, { 500, 500}, slice);
         }
     }
-
-
 }
