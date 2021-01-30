@@ -1,6 +1,6 @@
 /*
  * GAME SCENE
- * Copyright © 2020+ María López Ausín
+ * Copyright © 2021+ María López Ausín
  * @version 1.0.0
  */
 
@@ -74,7 +74,6 @@ namespace flappyfish
                 case ID(touch-ended):{
                     break;
                 }
-
             }
         }
     }
@@ -110,8 +109,20 @@ namespace flappyfish
                     canvas->fill_rectangle ({ bg2x, bgy },  {background->get_width() , background->get_height() }, background.get ());
                 }
                 if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
-                if (pipesTexture) canvas->fill_rectangle ({ pipes1.pos }, {100, 100 }, pipesTexture.get ());
+                if (pipesTexture) canvas->fill_rectangle ({ pipes1.pos }, {pipesTexture->get_width(), pipesTexture->get_height() }, pipesTexture.get ());
+
                 draw_slice (canvas, { canvas_width/2, canvas_height/2}, *atlas, ID(pipedown) );
+                draw_slice (canvas, { canvas_width*0.25f, canvas_height*0.5f}, *atlas, ID(pipeup) );
+
+                if(font)
+                {
+                    Text_Layout sample_text(*font, L"sample");
+                    canvas->draw_text({0.f, 0.f}, sample_text, BOTTOM | LEFT);
+                    canvas->draw_text({0.f, canvas_height}, sample_text, TOP | LEFT);
+                    canvas->draw_text({canvas_width, 0.f}, sample_text, BOTTOM | RIGHT);
+                    canvas->draw_text({canvas_width, canvas_height}, sample_text, TOP | RIGHT);
+                }
+
 
             }
         }
@@ -129,9 +140,10 @@ namespace flappyfish
                 background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
                 pipesTexture = Texture_2D::create (ID(pipes), context, "game-scene/Pipes.png");
 
+                font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
                 atlas.reset (new Atlas("pipes.sprites", context));
 
-                if (texture && background && pipesTexture && atlas->good())
+                if (texture && background && pipesTexture && atlas->good() && font->good())
                 {
                     context->add (texture);
                     context->add(background);
@@ -181,7 +193,7 @@ namespace flappyfish
 
         if (slice)
         {
-            canvas->fill_rectangle (where, { slice->width, slice->height }, slice);
+            canvas->fill_rectangle (where, { 500, 500}, slice);
         }
     }
 

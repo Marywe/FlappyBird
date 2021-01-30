@@ -1,6 +1,6 @@
 /*
  * MENU SCENE
- * Copyright © 2020+ María López Ausín
+ * Copyright © 2021+ María López Ausín
  * @version 1.0.0
  */
 
@@ -96,12 +96,8 @@ namespace flappyfish
 
                 if (context)
                 {
-                    //Se carga la fuente
+                    //Se carga la fuente y atlas
                     font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
-
-
-                    // Se carga el atlas:
-
                     atlas.reset (new Atlas("menu-scene/main-menu.sprites", context));
 
                     // Si el atlas se ha podido cargar el estado es READY y, en otro caso, es ERROR:
@@ -124,18 +120,12 @@ namespace flappyfish
     {
         if (!suspended)
         {
-            // El canvas se puede haber creado previamente, en cuyo caso solo hay que pedirlo:
-
             Canvas * canvas = context->get_renderer< Canvas > (ID(canvas));
-
-            // Si no se ha creado previamente, hay que crearlo una vez:
 
             if (!canvas)
             {
                 canvas = Canvas::create (ID(canvas), context, {{ canvas_width, canvas_height }});
             }
-
-            // Si el canvas se ha podido obtener o crear, se puede dibujar con él:
 
             if (canvas)
             {
@@ -146,7 +136,6 @@ namespace flappyfish
                 {
                     if(font)
                     {
-
                         Text_Layout sample_text(*font, L"sample");
                         canvas->draw_text({0.f, 0.f}, sample_text, BOTTOM | LEFT);
                         canvas->draw_text({0.f, canvas_height}, sample_text, TOP | LEFT);

@@ -1,6 +1,6 @@
 /*
  * GAME SCENE
- * Copyright © 2020+ María López Ausín
+ * Copyright © 2021+ María López Ausín
  * @version 1.0.0
  */
 
@@ -10,8 +10,6 @@
 #include <basics/Atlas>
 #include <basics/Canvas>
 
-
-
 namespace flappyfish
 {
     using basics::Point2f;
@@ -19,6 +17,7 @@ namespace flappyfish
 
     class Game_Scene : public basics::Scene
     {
+        typedef std::unique_ptr< basics::Raster_Font> Font_Handle;
         typedef std::unique_ptr< basics::Atlas       > Atlas_Handle;
         typedef std::shared_ptr< basics::Texture_2D > Texture_Handle;
 
@@ -43,7 +42,9 @@ namespace flappyfish
         Texture_Handle texture;
         Texture_Handle background;
         Texture_Handle pipesTexture;
+        Font_Handle font;
         Atlas_Handle atlas;
+
 
         float          bgx, bgy, bg2x;
         float          x, y;
@@ -57,7 +58,7 @@ namespace flappyfish
             bool up = true;
             const Atlas::Slice * slice;
         };
-        const int PIPESPEED = 50;
+        const int PIPESPEED = 100;
         Pipes pipes1, pipes2, pipes3;
 
     public:

@@ -1,6 +1,6 @@
 /*
  * MENU SCENE
- * Copyright © 2020+ María López Ausín
+ * Copyright © 2021+ María López Ausín
  * @version 1.0.0
  */
 
@@ -12,18 +12,13 @@
 #include <basics/Canvas>
 #include <basics/Point>
 #include <basics/Scene>
-#include <basics/Size>
-#include <basics/Timer>
-//#include <basics/Raster_Font>
+#include <basics/Raster_Font>
 
 namespace flappyfish
 {
-
     using basics::Atlas;
-    using basics::Timer;
     using basics::Canvas;
     using basics::Point2f;
-    using basics::Size2f;
     using basics::Texture_2D;
     using basics::Graphics_Context;
 
@@ -56,16 +51,13 @@ namespace flappyfish
 
     private:
 
-        State    state;                                     ///< Estado de la escena.
-        bool     suspended;                                 ///< true cuando la escena está en segundo plano y viceversa.
+        State    state;
+        bool     suspended;
 
         unsigned canvas_width;
         unsigned canvas_height;
 
-        Timer    timer;                                     ///< Cronómetro usado para medir intervalos de tiempo.
-
         Option   options[number_of_options];                ///< Datos de las opciones del menú
-
         std::unique_ptr< Atlas > atlas;                     ///< Atlas que contiene las imágenes de las opciones del menú
 
         typedef std::unique_ptr< basics::Raster_Font> Font_Handle;
@@ -85,23 +77,13 @@ namespace flappyfish
             return { canvas_width, canvas_height };
         }
 
-        /**
-         * Aquí se inicializan los atributos que deben restablecerse cada vez que se inicia la escena.
-         * @return
-         */
         bool initialize () override;
 
-        /**
-         * Este método lo invoca Director automáticamente cuando el juego pasa a segundo plano.
-         */
         void suspend () override
         {
             suspended = true;
         }
 
-        /**
-         * Este método lo invoca Director automáticamente cuando el juego pasa a primer plano.
-         */
         void resume () override
         {
             suspended = false;
@@ -113,16 +95,8 @@ namespace flappyfish
 
     private:
 
-        /**
-         * Establece las propiedades de cada opción si se ha podido cargar el atlas.
-         */
         void configure_options ();
 
-        /**
-         * Devuelve el índice de la opción que se encuentra bajo el punto indicado.
-         * @param point Punto que se usará para determinar qué opción tiene debajo.
-         * @return Índice de la opción que está debajo del punto o -1 si no hay alguna.
-         */
         int option_at (const Point2f & point);
 
     };

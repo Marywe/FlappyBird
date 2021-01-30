@@ -1,6 +1,6 @@
 /*
  * INTRO SCENE
- * Copyright © 2020+ María López Ausín
+ * Copyright © 2021+ María López Ausín
  * @version 1.0.0
  */
 
