@@ -10,7 +10,6 @@
 #include <basics/Canvas>
 #include <basics/Director>
 #include <basics/Transformation>
-//#include <basics/Raster_Font>
 
 using namespace basics;
 using namespace std;
@@ -90,19 +89,17 @@ namespace flappyfish
 
     void Menu_Scene::update (float time)
     {
-        if (!suspended) if (state == LOADING) if(!font)
+        if (!suspended) if (state == LOADING)
             {
                 Graphics_Context::Accessor context = director.lock_graphics_context ();
 
                 if (context)
                 {
-                    //Se carga la fuente y atlas
-                    font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
                     atlas.reset (new Atlas("menu-scene/main-menu.sprites", context));
 
                     // Si el atlas se ha podido cargar el estado es READY y, en otro caso, es ERROR:
 
-                    state = atlas->good () && font->good() ? READY : ERROR;
+                    state = atlas->good () ? READY : ERROR;
 
                     // Si el atlas está disponible, se inicializan los datos de las opciones del menú:
 
@@ -134,18 +131,6 @@ namespace flappyfish
 
                 if (state == READY)
                 {
-                    if(font)
-                    {
-                        Text_Layout sample_text(*font, L"sample");
-                        canvas->draw_text({0.f, 0.f}, sample_text, BOTTOM | LEFT);
-                        canvas->draw_text({0.f, canvas_height}, sample_text, TOP | LEFT);
-                        canvas->draw_text({canvas_width, 0.f}, sample_text, BOTTOM | RIGHT);
-                        canvas->draw_text({canvas_width, canvas_height}, sample_text, TOP | RIGHT);
-                    }
-
-
-
-
                     // Se dibuja el slice de cada una de las opciones del menú:
 
                     for (auto & option : options)

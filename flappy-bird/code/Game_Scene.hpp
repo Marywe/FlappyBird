@@ -27,7 +27,7 @@ namespace flappyfish
         {
             LOADING,
             RUNNING,
-            PAUSED
+            GAME_OVER
         };
 
         State          state;
@@ -40,7 +40,6 @@ namespace flappyfish
 
         Texture_Handle texture;
         Texture_Handle background;
-        Texture_Handle pipesTexture;
         Font_Handle font;
         Atlas_Handle atlas;
 
@@ -56,9 +55,9 @@ namespace flappyfish
             Point2f pos;
             const Atlas::Slice * slice;
         };
-        const int PIPESPEED = 100;
-        static constexpr float DISTANCEUP = 100;
-        static constexpr float DISTANCEX = 200;
+        const int PIPE_SPEED = 100;
+        static constexpr float DISTANCE_UP = 1100;
+        static constexpr float DISTANCE_X = 400;
 
 
         Pipes PD1, PD2, PD3, PU1, PU2, PU3;
@@ -84,12 +83,13 @@ namespace flappyfish
 
         void load ();
         void run  (float time);
-        void gameOver ();
+        void game_over ();
         void draw_slice (basics::Canvas * canvas, const basics::Point2f & where, basics::Atlas & atlas, basics::Id slice_id);
+        void add_punctuation();
 
         inline float random_Y_pos (const float previous_Y) ///< Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
         {
-            return std::max(200.0f, std::min( previous_Y + rand() % -200 + 200 , 1080.0f)); ///< Clamp entre dos valores para que no se salga en Y de la pantalla
+            return std::max(-600.0f, std::min( previous_Y + rand() % 600 + (-300) , 200.0f)); ///< Clamp entre dos valores para que no se salga en Y de la pantalla
         }
     };
 

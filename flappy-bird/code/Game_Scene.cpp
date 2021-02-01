@@ -40,9 +40,13 @@ namespace flappyfish
         bg2x        = bgx + 1280;
 
         //Tuberías
-        PD1.pos = {canvas_width, canvas_height / 2};
-        PD2.pos = PD1.pos;
-        PD3.pos = PD2.pos;
+        PD1.pos = PU1.pos =      { (canvas_width /2), canvas_height};
+        PD2.pos = PU2.pos =      {(PD1.pos.coordinates.x() + DISTANCE_X), (random_Y_pos(PD1.pos.coordinates.y()))};
+        PD3.pos = PU3.pos =      {(PD2.pos.coordinates.x() + DISTANCE_X), (random_Y_pos(PD2.pos.coordinates.y()))};
+
+        PU1.pos.coordinates.y() += DISTANCE_UP;
+        PU2.pos.coordinates.y() += DISTANCE_UP;
+        PU3.pos.coordinates.y() += DISTANCE_UP;
 
         return true;
     }
@@ -79,7 +83,7 @@ namespace flappyfish
         {
             case LOADING: load ();     break;
             case RUNNING: if(hasStartedPlaying) run  (time); break;
-            case PAUSED: gameOver(); break;
+            case GAME_OVER: game_over(); break;
         }
     }
 
@@ -104,21 +108,23 @@ namespace flappyfish
                     canvas->fill_rectangle ({ bg2x, bgy },  {background->get_width() , background->get_height() }, background.get ());
                 }
                 if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
-                if (pipesTexture) canvas->fill_rectangle ({ PD1.pos }, {pipesTexture->get_width(), pipesTexture->get_height() }, pipesTexture.get ());
 
-                draw_slice (canvas, { canvas_width/2, canvas_height/2}, *atlas, ID(pipedown) );
-                draw_slice (canvas, { canvas_width*0.25f, canvas_height*0.5f}, *atlas, ID(pipeup) );
+                draw_slice (canvas, PD1.pos, *atlas, ID(pipes.pipedown) );
+                draw_slice (canvas, PU1.pos, *atlas, ID(pipes.pipeup) );
+                draw_slice (canvas, PD2.pos, *atlas, ID(pipes.pipedown) );
+                draw_slice (canvas, PU2.pos, *atlas, ID(pipes.pipeup) );
+                draw_slice (canvas, PD3.pos, *atlas, ID(pipes.pipedown) );
+                draw_slice (canvas, PU3.pos, *atlas, ID(pipes.pipeup) );
+
 
                 if(font)
                 {
-                    Text_Layout sample_text(*font, L"sample");
+                    Text_Layout sample_text(*font, L"SAMPLE");
                     canvas->draw_text({0.f, 0.f}, sample_text, BOTTOM | LEFT);
                     canvas->draw_text({0.f, canvas_height}, sample_text, TOP | LEFT);
                     canvas->draw_text({canvas_width, 0.f}, sample_text, BOTTOM | RIGHT);
                     canvas->draw_text({canvas_width, canvas_height}, sample_text, TOP | RIGHT);
                 }
-
-
             }
         }
     }
@@ -133,16 +139,14 @@ namespace flappyfish
             {
                 texture = Texture_2D::create (ID(test), context, "game-scene/test.png");
                 background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
-                pipesTexture = Texture_2D::create (ID(pipes), context, "game-scene/Pipes.png");
 
                 font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
                 atlas.reset (new Atlas("pipes.sprites", context));
 
-                if (texture && background && pipesTexture && atlas->good() && font->good())
+                if (texture && background && atlas->good() && font->good())
                 {
                     context->add (texture);
                     context->add(background);
-                    context->add(pipesTexture);
 
                     state = RUNNING;
                 }
@@ -167,35 +171,42 @@ namespace flappyfish
 
 
         //Se mueven las tuberías más rápido
-        PD1.pos.coordinates.x() -= dT * PIPESPEED;
-        PD2.pos.coordinates.x() -= dT * PIPESPEED;
-        PD3.pos.coordinates.x() -= dT * PIPESPEED;
-        PU1.pos.coordinates.x() -= dT * PIPESPEED;
-        PU2.pos.coordinates.x() -= dT * PIPESPEED;
-        PU3.pos.coordinates.x() -= dT * PIPESPEED;
+        PD1.pos.coordinates.x() -= dT * PIPE_SPEED;
+        PD2.pos.coordinates.x() -= dT * PIPE_SPEED;
+        PD3.pos.coordinates.x() -= dT * PIPE_SPEED;
+        PU1.pos.coordinates.x() -= dT * PIPE_SPEED;
+        PU2.pos.coordinates.x() -= dT * PIPE_SPEED;
+        PU3.pos.coordinates.x() -= dT * PIPE_SPEED;
 
         //Al salirse de la pantalla, se pone tras la última             ///<Mas width
-        if      (PD1.pos.coordinates.x() +5 < 0 )
+        if      (PD1.pos.coordinates.x () +5 < 0 )
         {
-            PD1.pos.coordinates = {PD3.pos.coordinates.x() + DISTANCEX, random_Y_pos(PD3.pos.coordinates.y())};
+            PD1.pos.coordinates = {PD3.pos.coordinates.x() + DISTANCE_X, random_Y_pos(PD3.pos.coordinates.y())};
+            PU1.pos.coordinates = {PD1.pos.coordinates.x(), PD1.pos.coordinates.y() + DISTANCE_UP};
         }
-        else if (PD2.pos.coordinates.x() +5 < 0 )
+        else if (PD2.pos.coordinates.x () +5 < 0 )
         {
-            PD2.pos.coordinates = {PD1.pos.coordinates.x() + DISTANCEX, random_Y_pos(PD1.pos.coordinates.y())};
+            PD2.pos.coordinates = {PD1.pos.coordinates.x() + DISTANCE_X, random_Y_pos(PD1.pos.coordinates.y())};
+            PU2.pos.coordinates = {PD2.pos.coordinates.x(), PD2.pos.coordinates.y() + DISTANCE_UP};
 
         }
-        else if (PD3.pos.coordinates.x() +5 < 0 )
+        else if (PD3.pos.coordinates.x () +5 < 0 )
         {
-            PD3.pos.coordinates = {PD2.pos.coordinates.x() + DISTANCEX, random_Y_pos(PD2.pos.coordinates.y())};
+            PD3.pos.coordinates = {PD2.pos.coordinates.x() + DISTANCE_X, random_Y_pos(PD2.pos.coordinates.y())};
+            PU3.pos.coordinates = {PD3.pos.coordinates.x(), PD3.pos.coordinates.y() + DISTANCE_UP};
         }
+
+
+       // if(x + 200 <= PD1.pos.coordinates.x()) state = GAME_OVER;
+
 
 
         //Comprobación Game Over
-        if (y < 0) state = PAUSED;
+        if (y < 0) state = GAME_OVER;
 
     }
 
-    void Game_Scene::gameOver()
+    void Game_Scene::game_over()
     {
 
 
@@ -207,7 +218,11 @@ namespace flappyfish
 
         if (slice)
         {
-            canvas->fill_rectangle (where, { 500, 500}, slice);
+            canvas->fill_rectangle (where, { slice->width, slice->height}, slice);
         }
+    }
+
+    void Game_Scene::add_punctuation(){
+
     }
 }

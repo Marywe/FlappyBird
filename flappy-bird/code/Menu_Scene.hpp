@@ -12,7 +12,6 @@
 #include <basics/Canvas>
 #include <basics/Point>
 #include <basics/Scene>
-#include <basics/Raster_Font>
 
 namespace flappyfish
 {
@@ -60,8 +59,6 @@ namespace flappyfish
         Option   options[number_of_options];                ///< Datos de las opciones del menú
         std::unique_ptr< Atlas > atlas;                     ///< Atlas que contiene las imágenes de las opciones del menú
 
-        typedef std::unique_ptr< basics::Raster_Font> Font_Handle;
-        Font_Handle font;
 
     public:
 
@@ -96,7 +93,6 @@ namespace flappyfish
     private:
 
         void configure_options ();
-
         int option_at (const Point2f & point);
 
     };
