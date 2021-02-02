@@ -112,7 +112,9 @@ namespace flappyfish
 
                 for (int i = 0; i < array_size; ++i)
                 {
-                    if(i<3)
+
+                    if(i < array_size/2)
+
                         draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
                     else
                         draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipeup) );

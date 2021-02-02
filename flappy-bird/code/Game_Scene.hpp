@@ -53,9 +53,10 @@ namespace flappyfish
 
         struct Pipes {
             Point2f pos;
-            const Atlas::Slice * slice;
         };
-        const int PIPE_SPEED = 100;
+
+        Point2f dimensions = {0,0};
+        const int PIPE_SPEED = 130;
         static constexpr float DISTANCE_UP = 1100;
         static constexpr float DISTANCE_X = 400;
 
