@@ -40,13 +40,14 @@ namespace flappyfish
         bg2x        = bgx + 1280;
 
         //Tuberías
-        PD1.pos = PU1.pos =      { (canvas_width /2), canvas_height};
-        PD2.pos = PU2.pos =      {(PD1.pos.coordinates.x() + DISTANCE_X), (random_Y_pos(PD1.pos.coordinates.y()))};
-        PD3.pos = PU3.pos =      {(PD2.pos.coordinates.x() + DISTANCE_X), (random_Y_pos(PD2.pos.coordinates.y()))};
+        pipes[0].pos = pipes[array_size/2].pos =      { (canvas_width /2), canvas_height + 600};
+        pipes[array_size/2].pos.coordinates.y() += DISTANCE_UP;
 
-        PU1.pos.coordinates.y() += DISTANCE_UP;
-        PU2.pos.coordinates.y() += DISTANCE_UP;
-        PU3.pos.coordinates.y() += DISTANCE_UP;
+        for (unsigned i = 1; i < array_size / 2 ; ++i)
+        {
+            pipes[i].pos         = pipes[i + array_size/2].pos =         {(pipes[i-1].pos.coordinates.x() + DISTANCE_X), (random_Y_pos(pipes[i-1].pos.coordinates.y()))};
+            pipes[i+ array_size/2].pos.coordinates.y() += DISTANCE_UP;
+        }
 
         return true;
     }
@@ -109,13 +110,14 @@ namespace flappyfish
                 }
                 if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
 
-                draw_slice (canvas, PD1.pos, *atlas, ID(pipes.pipedown) );
-                draw_slice (canvas, PU1.pos, *atlas, ID(pipes.pipeup) );
-                draw_slice (canvas, PD2.pos, *atlas, ID(pipes.pipedown) );
-                draw_slice (canvas, PU2.pos, *atlas, ID(pipes.pipeup) );
-                draw_slice (canvas, PD3.pos, *atlas, ID(pipes.pipedown) );
-                draw_slice (canvas, PU3.pos, *atlas, ID(pipes.pipeup) );
+                for (int i = 0; i < array_size; ++i)
+                {
+                    if(i<3)
+                        draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
+                    else
+                        draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipeup) );
 
+                }
 
                 if(font)
                 {
@@ -170,36 +172,34 @@ namespace flappyfish
         else if (bg2x + background->get_width()/2 + 5 < 0)              bg2x = bgx + background->get_width();
 
 
+
         //Se mueven las tuberías más rápido
-        PD1.pos.coordinates.x() -= dT * PIPE_SPEED;
-        PD2.pos.coordinates.x() -= dT * PIPE_SPEED;
-        PD3.pos.coordinates.x() -= dT * PIPE_SPEED;
-        PU1.pos.coordinates.x() -= dT * PIPE_SPEED;
-        PU2.pos.coordinates.x() -= dT * PIPE_SPEED;
-        PU3.pos.coordinates.x() -= dT * PIPE_SPEED;
-
-        //Al salirse de la pantalla, se pone tras la última             ///<Mas width
-        if      (PD1.pos.coordinates.x () +5 < 0 )
+        for (int i = 0; i < array_size; ++i)
         {
-            PD1.pos.coordinates = {PD3.pos.coordinates.x() + DISTANCE_X, random_Y_pos(PD3.pos.coordinates.y())};
-            PU1.pos.coordinates = {PD1.pos.coordinates.x(), PD1.pos.coordinates.y() + DISTANCE_UP};
-        }
-        else if (PD2.pos.coordinates.x () +5 < 0 )
-        {
-            PD2.pos.coordinates = {PD1.pos.coordinates.x() + DISTANCE_X, random_Y_pos(PD1.pos.coordinates.y())};
-            PU2.pos.coordinates = {PD2.pos.coordinates.x(), PD2.pos.coordinates.y() + DISTANCE_UP};
-
-        }
-        else if (PD3.pos.coordinates.x () +5 < 0 )
-        {
-            PD3.pos.coordinates = {PD2.pos.coordinates.x() + DISTANCE_X, random_Y_pos(PD2.pos.coordinates.y())};
-            PU3.pos.coordinates = {PD3.pos.coordinates.x(), PD3.pos.coordinates.y() + DISTANCE_UP};
+            pipes[i].pos.coordinates.x() -= dT* PIPE_SPEED;
         }
 
+
+        unsigned index = 0;
+        for (index = 0; index < array_size / 2; ++index)
+        {
+            if (pipes[index].pos.coordinates.x() <= 0)
+            {
+                unsigned previous_pos = 0;
+
+                if (index == 0)
+                    previous_pos = array_size - 1;
+                else
+                    previous_pos = index - 1;
+
+                pipes[index].pos.coordinates.x() = pipes[index + array_size/2].pos.coordinates.x() = pipes[previous_pos].pos.coordinates.x() + DISTANCE_X;
+                pipes[index].pos.coordinates.y() = random_Y_pos(pipes[previous_pos].pos.coordinates.y());
+                pipes[index + array_size / 2].pos.coordinates.y() = pipes[index].pos.coordinates.y() + DISTANCE_UP;
+            }
+
+        }
 
        // if(x + 200 <= PD1.pos.coordinates.x()) state = GAME_OVER;
-
-
 
         //Comprobación Game Over
         if (y < 0) state = GAME_OVER;

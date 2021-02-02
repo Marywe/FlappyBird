@@ -59,8 +59,8 @@ namespace flappyfish
         static constexpr float DISTANCE_UP = 1100;
         static constexpr float DISTANCE_X = 400;
 
-
-        Pipes PD1, PD2, PD3, PU1, PU2, PU3;
+        unsigned array_size = 6;
+        Pipes pipes [6];
 
     public:
 
