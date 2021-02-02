@@ -40,15 +40,17 @@ namespace flappyfish
 
         Texture_Handle texture;
         Texture_Handle background;
-        Font_Handle font;
         Atlas_Handle atlas;
+
+        Font_Handle font;
+        unsigned punctuation;
 
 
         float          bgx, bgy, bg2x;
         float          x, y;
         float          yForce;
 
-        const int BGSPEED = 10;
+        const int BGSPEED = 100;
         static constexpr float GRAVITY = 9.8f;
 
         struct Pipes {

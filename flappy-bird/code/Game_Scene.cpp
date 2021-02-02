@@ -30,6 +30,7 @@ namespace flappyfish
 
         hasStartedPlaying = false;
 
+        punctuation = 3000;
         //Moñeco
         x         = 100;
         y         = canvas_height/2;
@@ -110,24 +111,24 @@ namespace flappyfish
                 }
                 if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
 
-                for (int i = 0; i < array_size; ++i)
+                if(atlas)
                 {
+                    for (int i = 0; i < array_size; ++i)
+                    {
 
-                    if(i < array_size/2)
+                         if(i < array_size/2)
 
-                        draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
-                    else
-                        draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipeup) );
+                             draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
+                         else
+                             draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipeup) );
 
+                    }
                 }
 
                 if(font)
                 {
-                    Text_Layout sample_text(*font, L"SAMPLE");
-                    canvas->draw_text({0.f, 0.f}, sample_text, BOTTOM | LEFT);
-                    canvas->draw_text({0.f, canvas_height}, sample_text, TOP | LEFT);
-                    canvas->draw_text({canvas_width, 0.f}, sample_text, BOTTOM | RIGHT);
-                    canvas->draw_text({canvas_width, canvas_height}, sample_text, TOP | RIGHT);
+                    Text_Layout punctuation_text(*font, to_wstring(punctuation));
+                    canvas->draw_text({canvas_width/2, canvas_height*0.95f}, punctuation_text, TOP | CENTER);
                 }
             }
         }
@@ -218,6 +219,9 @@ namespace flappyfish
     {
         const Atlas::Slice * slice = atlas.get_slice (slice_id);
 
+        if (dimensions.coordinates.x() == 0){
+            dimensions = {slice->width, slice->height};
+        }
         if (slice)
         {
             canvas->fill_rectangle (where, { slice->width, slice->height}, slice);
