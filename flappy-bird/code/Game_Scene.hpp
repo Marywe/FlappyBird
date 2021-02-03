@@ -4,6 +4,9 @@
  * @version 1.0.0
  */
 
+#ifndef GAME_SCENE_HEADER
+#define GAME_SCENE_HEADER
+
 #include <memory>
 #include <basics/Scene>
 #include <basics/Texture_2D>
@@ -97,3 +100,4 @@ namespace flappyfish
     };
 
 }
+#endif

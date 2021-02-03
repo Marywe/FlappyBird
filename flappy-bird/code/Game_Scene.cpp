@@ -40,6 +40,11 @@ namespace flappyfish
         bgy         = 1280/2;
         bg2x        = bgx + 1280;
 
+
+        srand (unsigned(time(nullptr)));
+
+
+
         //Tuberías
         pipes[0].pos = pipes[array_size/2].pos =      { (canvas_width /2), canvas_height + 600};
         pipes[array_size/2].pos.coordinates.y() += DISTANCE_UP;
@@ -49,6 +54,8 @@ namespace flappyfish
             pipes[i].pos         = pipes[i + array_size/2].pos =         {(pipes[i-1].pos.coordinates.x() + DISTANCE_X), (random_Y_pos(pipes[i-1].pos.coordinates.y()))};
             pipes[i+ array_size/2].pos.coordinates.y() += DISTANCE_UP;
         }
+
+
 
         return true;
     }
