@@ -202,11 +202,9 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
-        configure();
+        //if(state==RUNNING)configure();
         if(game_state == PLAYING)
         {
-
-
             //Movimiento en Y del pez con gravedad
             yForce  -= GRAVITY * dT;
             y       += yForce * 1.5f;
