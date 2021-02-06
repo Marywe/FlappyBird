@@ -30,10 +30,16 @@ namespace flappyfish
         {
             LOADING,
             RUNNING,
-            GAME_OVER
+        };
+
+        enum Game_state {
+            PLAYING,
+            GAME_OVER,
+            PAUSED
         };
 
         State          state;
+        Game_state     game_state;
         bool           suspended;
 
         unsigned       canvas_width;
@@ -44,6 +50,7 @@ namespace flappyfish
         Texture_Handle texture;
         Texture_Handle background;
         Atlas_Handle atlas;
+
 
         Font_Handle font;
         unsigned punctuation;

@@ -21,6 +21,9 @@ namespace flappyfish
     using basics::Texture_2D;
     using basics::Graphics_Context;
 
+    typedef std::shared_ptr< basics::Texture_2D > Texture_Handle;
+
+
     class Menu_Scene : public basics::Scene
     {
 
@@ -34,10 +37,11 @@ namespace flappyfish
         enum Option_Id
         {
             PLAY,
-            SCORES,
-            HELP,
-            CREDITS
+            QUIT,
+
         };
+
+        Texture_Handle background;
 
         struct Option
         {
@@ -46,7 +50,7 @@ namespace flappyfish
             float   is_pressed;
         };
 
-        static const unsigned number_of_options = 4;
+        static const unsigned number_of_options = 2;
 
     private:
 
@@ -64,11 +68,7 @@ namespace flappyfish
 
         Menu_Scene();
 
-        /**
-         * Este método lo llama Director para conocer la resolución virtual con la que está
-         * trabajando la escena.
-         * @return Tamaño en coordenadas virtuales que está usando la escena.
-         */
+
         basics::Size2u get_view_size () override
         {
             return { canvas_width, canvas_height };
@@ -94,7 +94,6 @@ namespace flappyfish
 
         void configure_options ();
         int option_at (const Point2f & point);
-
     };
 
 }

@@ -25,12 +25,14 @@ namespace flappyfish
 
     bool Game_Scene::initialize ()
     {
+        game_state = PLAYING;
         state     = LOADING;
         suspended = false;
 
         hasStartedPlaying = false;
 
-        punctuation = 3000;
+        punctuation = 0;
+
         //Moñeco
         x         = 100;
         y         = canvas_height/2;
@@ -92,7 +94,6 @@ namespace flappyfish
         {
             case LOADING: load ();     break;
             case RUNNING: if(hasStartedPlaying) run  (time); break;
-            case GAME_OVER: game_over(); break;
         }
     }
 
@@ -137,6 +138,9 @@ namespace flappyfish
                     Text_Layout punctuation_text(*font, to_wstring(punctuation));
                     canvas->draw_text({canvas_width/2, canvas_height*0.95f}, punctuation_text, TOP | CENTER);
                 }
+
+                if(game_state == GAME_OVER) ; //render menú gameover
+                else if (game_state == PAUSED) ; //render pause
             }
         }
     }
@@ -168,51 +172,54 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
-        //Movimiento en Y del pez con gravedad
-        yForce  -= GRAVITY * dT;
-        y       += yForce * 1.5f;
-
-
-        //Se mueve el fondo poco a poco
-        bgx     -= dT*BGSPEED;
-        bg2x    -= dT*BGSPEED;
-
-        //Cuando los sprites del bg se salen de la pantalla +5px, se recolocan
-        if      (bgx + background->get_width()/2 + 5 < 0)               bgx = bg2x + background->get_width();
-        else if (bg2x + background->get_width()/2 + 5 < 0)              bg2x = bgx + background->get_width();
-
-
-
-        //Se mueven las tuberías más rápido
-        for (int i = 0; i < array_size; ++i)
+        if(game_state == PLAYING)
         {
-            pipes[i].pos.coordinates.x() -= dT* PIPE_SPEED;
-        }
+            //Movimiento en Y del pez con gravedad
+            yForce  -= GRAVITY * dT;
+            y       += yForce * 1.5f;
 
 
-        unsigned index = 0;
-        for (index = 0; index < array_size / 2; ++index)
-        {
-            if (pipes[index].pos.coordinates.x() <= 0)
+            //Se mueve el fondo poco a poco
+            bgx     -= dT*BGSPEED;
+            bg2x    -= dT*BGSPEED;
+
+            //Cuando los sprites del bg se salen de la pantalla +5px, se recolocan
+            if      (bgx + background->get_width()/2 + 5 < 0)               bgx = bg2x + background->get_width();
+            else if (bg2x + background->get_width()/2 + 5 < 0)              bg2x = bgx + background->get_width();
+
+
+            //Se mueven las tuberías más rápido
+            for (int i = 0; i < array_size; ++i)
             {
-                unsigned previous_pos = 0;
-
-                if (index == 0)
-                    previous_pos = array_size - 1;
-                else
-                    previous_pos = index - 1;
-
-                pipes[index].pos.coordinates.x() = pipes[index + array_size/2].pos.coordinates.x() = pipes[previous_pos].pos.coordinates.x() + DISTANCE_X;
-                pipes[index].pos.coordinates.y() = random_Y_pos(pipes[previous_pos].pos.coordinates.y());
-                pipes[index + array_size / 2].pos.coordinates.y() = pipes[index].pos.coordinates.y() + DISTANCE_UP;
+                pipes[i].pos.coordinates.x() -= dT* PIPE_SPEED;
             }
 
+            //Comprobación salir de la pantalla
+            unsigned index = 0;
+            for (index = 0; index < array_size / 2; ++index)
+            {
+                if (pipes[index].pos.coordinates.x() <= 0) //
+                {
+                    unsigned previous_pos = 0;
+
+                    if (index == 0)
+                        previous_pos = array_size - 1;
+                    else
+                        previous_pos = index - 1;
+
+                    pipes[index].pos.coordinates.x() = pipes[index + array_size/2].pos.coordinates.x() = pipes[previous_pos].pos.coordinates.x() + DISTANCE_X;
+                    pipes[index].pos.coordinates.y() = random_Y_pos(pipes[previous_pos].pos.coordinates.y());
+                    pipes[index + array_size / 2].pos.coordinates.y() = pipes[index].pos.coordinates.y() + DISTANCE_UP;
+
+                    add_punctuation();
+                }
+
+            }
+
+            //Comprobación Game Over
+            if (y < 0) game_state = GAME_OVER;
         }
 
-       // if(x + 200 <= PD1.pos.coordinates.x()) state = GAME_OVER;
-
-        //Comprobación Game Over
-        if (y < 0) state = GAME_OVER;
 
     }
 
@@ -235,7 +242,8 @@ namespace flappyfish
         }
     }
 
-    void Game_Scene::add_punctuation(){
-
+    void Game_Scene::add_punctuation()
+    {
+        ++punctuation;
     }
 }

@@ -67,16 +67,18 @@ namespace flappyfish
                 case ID(touch-ended):           // El usuario deja de tocar la pantalla
                 {
                     // Se "sueltan" todas las opciones:
-
                     for (auto & option : options) option.is_pressed = false;
 
                     // Se determina qué opción se ha dejado de tocar la última y se actúa como corresponda:
-
                     Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
 
                     if (option_at (touch_location) == PLAY)
                     {
                         director.run_scene (shared_ptr< Scene >(new Game_Scene));
+                    }
+                    else if (option_at (touch_location) == QUIT)
+                    {
+                        director.stop();
                     }
 
                     break;
@@ -95,11 +97,16 @@ namespace flappyfish
 
                 if (context)
                 {
-                    atlas.reset (new Atlas("menu-scene/main-menu.sprites", context));
+                    background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
+                    atlas.reset (new Atlas("menu-sprites.sprites", context));
 
                     // Si el atlas se ha podido cargar el estado es READY y, en otro caso, es ERROR:
 
-                    state = atlas->good () ? READY : ERROR;
+                    if(atlas->good () && background)
+                    {
+                        context->add(background);
+                        state = READY;
+                    }
 
                     // Si el atlas está disponible, se inicializan los datos de las opciones del menú:
 
@@ -131,8 +138,13 @@ namespace flappyfish
 
                 if (state == READY)
                 {
-                    // Se dibuja el slice de cada una de las opciones del menú:
 
+                    canvas->fill_rectangle ({ canvas_width/2, canvas_height/2 },   {background->get_width() , background->get_height() }, background.get ());
+
+                    const Atlas::Slice * slice = atlas->get_slice (ID(title));
+                    canvas->fill_rectangle ({canvas_width/2, canvas_height*0.7f }, { slice->width, slice->height }, slice);
+
+                    // Se dibuja el slice de cada una de las opciones del menú:
                     for (auto & option : options)
                     {
                         canvas->set_transform
@@ -146,6 +158,9 @@ namespace flappyfish
 
                         canvas->fill_rectangle ({ 0.f, 0.f }, { option.slice->width, option.slice->height }, option.slice, CENTER | TOP);
                     }
+
+
+
 
                     // Se restablece la transformación aplicada a las opciones para que no afecte a
                     // dibujos posteriores realizados con el mismo canvas:
@@ -162,13 +177,10 @@ namespace flappyfish
     {
         // Se asigna un slice del atlas a cada opción del menú según su ID:
 
-        options[PLAY   ].slice = atlas->get_slice (ID(play)   );
-        options[SCORES ].slice = atlas->get_slice (ID(scores) );
-        options[HELP   ].slice = atlas->get_slice (ID(help)   );
-        options[CREDITS].slice = atlas->get_slice (ID(credits));
+        options[PLAY   ].slice = atlas->get_slice (ID(PLAY)   );
+        options[QUIT ].slice = atlas->get_slice (ID(QUIT) );
 
         // Se calcula la altura total del menú:
-
         float menu_height = 0;
 
         for (auto & option : options) menu_height += option.slice->height;
@@ -182,13 +194,12 @@ namespace flappyfish
 
         for (unsigned index = 0; index < number_of_options; ++index)
         {
-            options[index].position = Point2f{ canvas_width / 2.f, option_top };
+            options[index].position = Point2f { canvas_width / 2.f, option_top };
 
             option_top -= options[index].slice->height;
         }
 
         // Se restablece la presión de cada opción:
-
         initialize ();
     }
 
