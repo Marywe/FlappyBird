@@ -136,9 +136,8 @@ namespace flappyfish
                 canvas->clear ();
                 canvas->set_color(0,0,1);
 
-                if (state == READY)
+                if (state == READY) //Bg, title y options
                 {
-
                     canvas->fill_rectangle ({ canvas_width/2, canvas_height/2 },   {background->get_width() , background->get_height() }, background.get ());
 
                     const Atlas::Slice * slice = atlas->get_slice (ID(title));

@@ -5,7 +5,6 @@
  */
 
 #include "Game_Scene.hpp"
-#include "Menu_Scene.hpp"
 #include <basics/Canvas>
 #include <basics/Director>
 #include <basics/Scaling>
@@ -49,13 +48,13 @@ namespace flappyfish
 
 
         //Tuberías
-        pipes[0].pos = pipes[array_size/2].pos =      { (canvas_width /2), canvas_height + 600};
-        pipes[array_size/2].pos.coordinates.y() += DISTANCE_UP;
+        pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width / 2), canvas_height + 600};
+        pipes[pipes_size / 2].pos.coordinates.y() += DISTANCE_UP;
 
-        for (unsigned i = 1; i < array_size / 2 ; ++i)
+        for (unsigned i = 1; i < pipes_size / 2 ; ++i)
         {
-            pipes[i].pos         = pipes[i + array_size/2].pos =         {(pipes[i-1].pos.coordinates.x() + DISTANCE_X), (random_Y_pos(pipes[i-1].pos.coordinates.y()))};
-            pipes[i+ array_size/2].pos.coordinates.y() += DISTANCE_UP;
+            pipes[i].pos         = pipes[i + pipes_size / 2].pos =         {(pipes[i - 1].pos.coordinates.x() + DISTANCE_X), (random_Y_pos(pipes[i - 1].pos.coordinates.y()))};
+            pipes[i + pipes_size / 2].pos.coordinates.y() += DISTANCE_UP;
         }
 
 
@@ -85,6 +84,28 @@ namespace flappyfish
                     yForce = 5;
                     break;
                 }
+             /*   case ID(touch-ended):
+                {
+                    if(game_state != PLAYING)
+                    {
+                        Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
+
+                        if (option_at (touch_location) == REPLAY && game_state == GAME_OVER)
+                        {
+                           initialize();
+                        }
+                        else if (option_at (touch_location) == QUIT)
+                        {
+                            director.stop();
+                        }
+                  //     else if (option_at (touch_location) == REPLAY && game_state == PAUSED)
+                  //     {
+                  //         game_state = PLAYING;
+                  //     }
+                    }
+
+                    break;
+                }*/
             }
         }
     }
@@ -122,10 +143,10 @@ namespace flappyfish
 
                 if(atlas)
                 {
-                    for (int i = 0; i < array_size; ++i)
+                    for (int i = 0; i < pipes_size; ++i)
                     {
 
-                         if(i < array_size/2)
+                         if(i < pipes_size / 2)
 
                              draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
                          else
@@ -140,8 +161,15 @@ namespace flappyfish
                     canvas->draw_text({canvas_width/2, canvas_height*0.95f}, punctuation_text, TOP | CENTER);
                 }
 
-                if(game_state == GAME_OVER) ; //render menú gameover
-                else if (game_state == PAUSED) ; //render pause
+                if (atlas_menu)
+                {
+
+                //for (auto & option : options)
+                //{
+                //    canvas->fill_rectangle ({ 0.f, 0.f }, { option.slice->width, option.slice->height }, option.slice, CENTER | TOP);
+                //}
+                } //render menú gameover
+              //else if (game_state == PAUSED) ; //render pause
             }
         }
     }
@@ -159,8 +187,9 @@ namespace flappyfish
 
                 font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
                 atlas.reset (new Atlas("pipes.sprites", context));
+                atlas_menu.reset (new Atlas("menu-sprites.sprites", context));
 
-                if (texture && background && atlas->good() && font->good())
+                if (texture && background && atlas->good() && font->good() && atlas_menu->good())
                 {
                     context->add (texture);
                     context->add(background);
@@ -173,8 +202,11 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
+        configure();
         if(game_state == PLAYING)
         {
+
+
             //Movimiento en Y del pez con gravedad
             yForce  -= GRAVITY * dT;
             y       += yForce * 1.5f;
@@ -190,27 +222,27 @@ namespace flappyfish
 
 
             //Se mueven las tuberías más rápido
-            for (int i = 0; i < array_size; ++i)
+            for (int i = 0; i < pipes_size; ++i)
             {
                 pipes[i].pos.coordinates.x() -= dT* PIPE_SPEED;
             }
 
             //Comprobación salir de la pantalla
             unsigned index = 0;
-            for (index = 0; index < array_size / 2; ++index)
+            for (index = 0; index < pipes_size / 2; ++index)
             {
                 if (pipes[index].pos.coordinates.x() + dimensions[0] / 2 <= 0) //
                 {
                     unsigned previous_pos = 0;
 
                     if (index == 0)
-                        previous_pos = array_size - 1;
+                        previous_pos = pipes_size - 1;
                     else
                         previous_pos = index - 1;
 
-                    pipes[index].pos.coordinates.x() = pipes[index + array_size/2].pos.coordinates.x() = pipes[previous_pos].pos.coordinates.x() + DISTANCE_X;
+                    pipes[index].pos.coordinates.x() = pipes[index + pipes_size / 2].pos.coordinates.x() = pipes[previous_pos].pos.coordinates.x() + DISTANCE_X;
                     pipes[index].pos.coordinates.y() = random_Y_pos(pipes[previous_pos].pos.coordinates.y());
-                    pipes[index + array_size / 2].pos.coordinates.y() = pipes[index].pos.coordinates.y() + DISTANCE_UP;
+                    pipes[index + pipes_size / 2].pos.coordinates.y() = pipes[index].pos.coordinates.y() + DISTANCE_UP;
 
                     add_punctuation();
                 }
@@ -218,7 +250,7 @@ namespace flappyfish
             }
 
 
-            for (int i = 0; i < array_size; ++i)
+            for (int i = 0; i < pipes_size; ++i)
             {
                 if(x > pipes[index].pos[0] - dimensions[0]
                 && x < pipes[index].pos[0] + dimensions[0]
@@ -233,7 +265,6 @@ namespace flappyfish
             //Comprobación Game Over
             if (y < 0) game_state = GAME_OVER;
         }
-
 
     }
 
@@ -258,5 +289,51 @@ namespace flappyfish
     void Game_Scene::add_punctuation()
     {
         ++punctuation;
+    }
+
+
+    void Game_Scene::configure() {
+        // Se asigna un slice del atlas a cada opción del menú según su ID:
+        options[REPLAY   ].slice = atlas_menu->get_slice (ID(replay_but)   );
+        options[QUIT ].slice = atlas_menu->get_slice (ID(quit_but) );
+        //options[CONTINUE ].slice = atlas->get_slice (ID(continue_but) );
+
+        float menu_height = 0;
+
+        for (auto & option : options) menu_height += option.slice->height;
+
+        float option_top = canvas_height / 2.f + menu_height / 2.f;
+
+        // Se establece la posición del borde superior de cada opción:
+        for (unsigned index = 0; index < number_of_options; ++index)
+        {
+            options[index].position = Point2f { canvas_width / 2.f, option_top };
+
+            option_top -= options[index].slice->height;
+        }
+
+         initialize ();
+    }
+
+
+    int Game_Scene::option_at (const Point2f & point)
+    {
+        for (int index = 0; index < 2; ++index)
+        {
+            const Option & option = options[index];
+
+            if
+                    (
+                    point[0] > option.position[0] - option.slice->width  &&
+                    point[0] < option.position[0] + option.slice->width  &&
+                    point[1] > option.position[1] - option.slice->height &&
+                    point[1] < option.position[1] + option.slice->height
+                    )
+            {
+                return index;
+            }
+        }
+
+        return -1;
     }
 }

@@ -24,7 +24,7 @@ namespace flappyfish
         typedef std::unique_ptr< basics::Atlas       > Atlas_Handle;
         typedef std::shared_ptr< basics::Texture_2D > Texture_Handle;
 
-    public:
+    private:
 
         enum State
         {
@@ -38,6 +38,13 @@ namespace flappyfish
             PAUSED
         };
 
+        enum Option_Id
+        {
+            REPLAY,
+            QUIT,
+
+        };
+
         State          state;
         Game_state     game_state;
         bool           suspended;
@@ -49,7 +56,7 @@ namespace flappyfish
 
         Texture_Handle texture;
         Texture_Handle background;
-        Atlas_Handle atlas;
+        Atlas_Handle atlas, atlas_menu;
 
 
         Font_Handle font;
@@ -72,8 +79,19 @@ namespace flappyfish
         static constexpr float DISTANCE_UP = 1100;
         static constexpr float DISTANCE_X = 400;
 
-        unsigned array_size = 6;
-        Pipes pipes [6];
+        static const unsigned pipes_size = 6;
+        Pipes pipes [pipes_size];
+
+
+        struct Option
+        {
+            const Atlas::Slice * slice;
+            Point2f position;
+        };
+
+        static const unsigned number_of_options = 2;
+        Option   options[number_of_options];                ///< Datos de las opciones del menú
+
 
     public:
 
@@ -99,6 +117,9 @@ namespace flappyfish
         void game_over ();
         void draw_slice (basics::Canvas * canvas, const basics::Point2f & where, basics::Atlas & atlas, basics::Id slice_id);
         void add_punctuation();
+        void configure();
+        int option_at (const Point2f & point);
+
 
         inline float random_Y_pos (const float previous_Y) ///< Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
         {
