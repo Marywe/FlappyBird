@@ -90,8 +90,6 @@ namespace flappyfish
         void update (float time) override;
         void render (Graphics_Context::Accessor & context) override;
 
-    private:
-
         void configure_options ();
         int option_at (const Point2f & point);
     };

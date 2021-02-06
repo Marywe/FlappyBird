@@ -187,11 +187,9 @@ namespace flappyfish
 
         // Se calcula la posición del borde superior del menú en su conjunto de modo que
         // quede centrado verticalmente:
-
         float option_top = canvas_height / 2.f + menu_height / 2.f;
 
         // Se establece la posición del borde superior de cada opción:
-
         for (unsigned index = 0; index < number_of_options; ++index)
         {
             options[index].position = Point2f { canvas_width / 2.f, option_top };

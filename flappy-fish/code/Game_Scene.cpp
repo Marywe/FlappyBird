@@ -5,6 +5,7 @@
  */
 
 #include "Game_Scene.hpp"
+#include "Menu_Scene.hpp"
 #include <basics/Canvas>
 #include <basics/Director>
 #include <basics/Scaling>
@@ -198,7 +199,7 @@ namespace flappyfish
             unsigned index = 0;
             for (index = 0; index < array_size / 2; ++index)
             {
-                if (pipes[index].pos.coordinates.x() <= 0) //
+                if (pipes[index].pos.coordinates.x() + dimensions[0] / 2 <= 0) //
                 {
                     unsigned previous_pos = 0;
 
@@ -216,6 +217,19 @@ namespace flappyfish
 
             }
 
+
+            for (int i = 0; i < array_size; ++i)
+            {
+                if(x > pipes[index].pos[0] - dimensions[0]
+                && x < pipes[index].pos[0] + dimensions[0]
+                && y > pipes[index].pos[1] - dimensions[1]
+                && y < pipes[index].pos[1] + dimensions[1])
+                {
+                    game_state = GAME_OVER;
+                }
+            }
+
+
             //Comprobación Game Over
             if (y < 0) game_state = GAME_OVER;
         }
@@ -225,7 +239,6 @@ namespace flappyfish
 
     void Game_Scene::game_over()
     {
-
 
     }
 
