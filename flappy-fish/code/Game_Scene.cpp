@@ -84,7 +84,7 @@ namespace flappyfish
                     yForce = 5;
                     break;
                 }
-             /*   case ID(touch-ended):
+               case ID(touch-ended):
                 {
                     if(game_state != PLAYING)
                     {
@@ -98,14 +98,15 @@ namespace flappyfish
                         {
                             director.stop();
                         }
-                  //     else if (option_at (touch_location) == REPLAY && game_state == PAUSED)
-                  //     {
-                  //         game_state = PLAYING;
-                  //     }
+                   else if (option_at (touch_location) == REPLAY && game_state == PAUSED)
+                   {
+                       game_state = PLAYING;
+                    }
+
                     }
 
                     break;
-                }*/
+                }
             }
         }
     }
@@ -163,13 +164,40 @@ namespace flappyfish
 
                 if (atlas_menu)
                 {
+                    if(game_state == GAME_OVER)
+                        draw_slice(canvas, {canvas_width/2, canvas_height/2}, *atlas_menu, ID(pause));
+                    else if(game_state == PAUSED)
+                    {
+                        draw_slice(canvas, {canvas_width/2, canvas_height/2}, *atlas_menu, ID(game_over));
 
-                //for (auto & option : options)
-                //{
-                //    canvas->fill_rectangle ({ 0.f, 0.f }, { option.slice->width, option.slice->height }, option.slice, CENTER | TOP);
-                //}
-                } //render menú gameover
-              //else if (game_state == PAUSED) ; //render pause
+                        options[REPLAY   ].slice = atlas_menu->get_slice (ID(replay_but)   );
+                        options[QUIT ].slice = atlas_menu->get_slice (ID(quit_but) );
+
+                        float heigth = 0;
+
+                        for (unsigned i = 0; i < 2; ++i)
+                        {
+                            options[i].position = {canvas_width/2, canvas_height/2 + heigth};
+                            canvas->fill_rectangle ({ options[i].position }, { options[i].slice->width, options[i].slice->height }, options[i].slice, CENTER | TOP);
+                            heigth -= options[i].slice->height;
+                        }
+                    }
+                    else if (game_state == PAUSED)
+                    {
+                        draw_slice(canvas, {canvas_width/2, canvas_height/2}, *atlas_menu, ID(pause));
+
+                        options[PAUSED   ].slice = atlas_menu->get_slice (ID(continue_but)   );
+                        options[QUIT ].slice = atlas_menu->get_slice (ID(quit_but) );
+
+                        float heigth = 0;
+                        for (unsigned i = 2; i > 0; --i)
+                        {
+                            options[i].position = {canvas_width/2, canvas_height/2 + heigth};
+                            canvas->fill_rectangle ({ options[i].position }, { options[i].slice->width, options[i].slice->height }, options[i].slice, CENTER | TOP);
+                            heigth -= options[i].slice->height;
+                        }
+                    }
+                }
             }
         }
     }
@@ -202,7 +230,8 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
-        //if(state==RUNNING)configure();
+        //configure();
+
         if(game_state == PLAYING)
         {
             //Movimiento en Y del pez con gravedad
@@ -287,30 +316,6 @@ namespace flappyfish
     void Game_Scene::add_punctuation()
     {
         ++punctuation;
-    }
-
-
-    void Game_Scene::configure() {
-        // Se asigna un slice del atlas a cada opción del menú según su ID:
-        options[REPLAY   ].slice = atlas_menu->get_slice (ID(replay_but)   );
-        options[QUIT ].slice = atlas_menu->get_slice (ID(quit_but) );
-        //options[CONTINUE ].slice = atlas->get_slice (ID(continue_but) );
-
-        float menu_height = 0;
-
-        for (auto & option : options) menu_height += option.slice->height;
-
-        float option_top = canvas_height / 2.f + menu_height / 2.f;
-
-        // Se establece la posición del borde superior de cada opción:
-        for (unsigned index = 0; index < number_of_options; ++index)
-        {
-            options[index].position = Point2f { canvas_width / 2.f, option_top };
-
-            option_top -= options[index].slice->height;
-        }
-
-         initialize ();
     }
 
 
