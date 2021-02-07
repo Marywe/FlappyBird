@@ -28,18 +28,18 @@ namespace flappyfish
         game_state = PLAYING;
         state     = LOADING;
         suspended = false;
-
         hasStartedPlaying = false;
 
         punctuation = 0;
+        pause_button.position = {(float)canvas_width * 0.1f, (float)canvas_height * 0.9f};
 
         //Moñeco
         x         = 100;
-        y         = canvas_height/2;
+        y         = (float)canvas_height/2;
 
         //Fondo
-        bgx         = 1280/2;
-        bgy         = 1280/2;
+        bgx         = 1280.0f/2;
+        bgy         = 1280.0f/2;
         bg2x        = bgx + 1280;
 
 
@@ -86,9 +86,10 @@ namespace flappyfish
                 }
                case ID(touch-ended):
                 {
+                    Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
+
                     if(game_state != PLAYING)
                     {
-                        Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
 
                         if (option_at (touch_location) == REPLAY && game_state == GAME_OVER)
                         {
@@ -98,11 +99,24 @@ namespace flappyfish
                         {
                             director.stop();
                         }
-                   else if (option_at (touch_location) == REPLAY && game_state == PAUSED)
-                   {
-                       game_state = PLAYING;
+                        else if (option_at (touch_location) == REPLAY && game_state == PAUSED)
+                        {
+                             game_state = PLAYING;
+                        }
                     }
 
+                    else
+                    {
+                        if
+                                (
+                                touch_location[0] > pause_button.position[0] - pause_button.size[0]  &&
+                                touch_location[0] < pause_button.position[0] + pause_button.size[0]  &&
+                                touch_location[1] > pause_button.position[1] - pause_button.size[1] &&
+                                touch_location[1] < pause_button.position[1] + pause_button.size[1]
+                                )
+                        {
+                           game_state = PAUSED;
+                        }
                     }
 
                     break;
@@ -164,9 +178,8 @@ namespace flappyfish
 
                 if (atlas_menu)
                 {
+
                     if(game_state == GAME_OVER)
-                        draw_slice(canvas, {canvas_width/2, canvas_height/2}, *atlas_menu, ID(pause));
-                    else if(game_state == PAUSED)
                     {
                         draw_slice(canvas, {canvas_width/2, canvas_height/2}, *atlas_menu, ID(game_over));
 
@@ -196,6 +209,10 @@ namespace flappyfish
                             canvas->fill_rectangle ({ options[i].position }, { options[i].slice->width, options[i].slice->height }, options[i].slice, CENTER | TOP);
                             heigth -= options[i].slice->height;
                         }
+                    }
+                    else if(game_state == PLAYING)
+                    {
+                        draw_slice(canvas, {canvas_width*0.1f, canvas_height*0.9f}, *atlas_menu, ID(pause_but));
                     }
                 }
             }
@@ -304,9 +321,16 @@ namespace flappyfish
     {
         const Atlas::Slice * slice = atlas.get_slice (slice_id);
 
-        if (dimensions.coordinates.x() == 0){
+//Comprobaciones
+        if (dimensions.coordinates.x() == 0 && slice_id == ID(pipedown))
+        {
             dimensions = {slice->width, slice->height};
         }
+        else if(pause_button.size.width == 0 && slice_id == ID(pause_but))
+        {
+            pause_button.size = {slice->width, slice->height};
+        }
+
         if (slice)
         {
             canvas->fill_rectangle (where, { slice->width, slice->height}, slice);

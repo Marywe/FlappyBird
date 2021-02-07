@@ -16,6 +16,8 @@
 namespace flappyfish
 {
     using basics::Point2f;
+    using basics::Size2f;
+
     using basics::Atlas;
 
     class Game_Scene : public basics::Scene
@@ -42,7 +44,6 @@ namespace flappyfish
         {
             REPLAY,
             QUIT,
-
         };
 
         State          state;
@@ -92,6 +93,11 @@ namespace flappyfish
         static const unsigned number_of_options = 2;
         Option   options[number_of_options];                ///< Datos de las opciones del menú
 
+        struct Pause_Button {
+            Point2f position;
+            Size2f size;
+        };
+        Pause_Button pause_button;
 
     public:
 
