@@ -48,7 +48,7 @@ namespace flappyfish
 
 
         //Tuberías
-        pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width / 2), canvas_height + 600};
+        pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width *3/4), canvas_height/2 - DISTANCE_UP/2};
         pipes[pipes_size / 2].pos.coordinates.y() += DISTANCE_UP;
 
         for (unsigned i = 1; i < pipes_size / 2 ; ++i)
@@ -107,16 +107,15 @@ namespace flappyfish
 
                     else
                     {
-                        if
-                                (
-                                touch_location[0] > pause_button.position[0] - pause_button.size[0]  &&
+                        if(     touch_location[0] > pause_button.position[0] - pause_button.size[0]  &&
                                 touch_location[0] < pause_button.position[0] + pause_button.size[0]  &&
                                 touch_location[1] > pause_button.position[1] - pause_button.size[1] &&
-                                touch_location[1] < pause_button.position[1] + pause_button.size[1]
-                                )
+                                touch_location[1] < pause_button.position[1] + pause_button.size[1]  )
                         {
                            game_state = PAUSED;
                         }
+
+
                     }
 
                     break;
@@ -158,6 +157,7 @@ namespace flappyfish
 
                 if(atlas)
                 {
+
                     for (int i = 0; i < pipes_size; ++i)
                     {
 
@@ -236,6 +236,12 @@ namespace flappyfish
 
                 if (texture && background && atlas->good() && font->good() && atlas_menu->good())
                 {
+                    dimensions = {atlas->get_slice (ID(pipes.pipedown))->width,
+                                  atlas->get_slice (ID(pipes.pipedown))->height};
+
+                    pause_button.size = {atlas_menu->get_slice (ID(pause_but))->width,
+                                         atlas_menu->get_slice (ID(pause_but))->height};
+
                     context->add (texture);
                     context->add(background);
 
@@ -275,7 +281,7 @@ namespace flappyfish
             unsigned index = 0;
             for (index = 0; index < pipes_size / 2; ++index)
             {
-                if (pipes[index].pos.coordinates.x() + dimensions[0] / 2 <= 0) //
+                if (pipes[index].pos.coordinates.x() + dimensions.coordinates.x()/2 <= 0) //
                 {
                     unsigned previous_pos = 0;
 
@@ -294,16 +300,16 @@ namespace flappyfish
             }
 
 
-            for (int i = 0; i < pipes_size; ++i)
-            {
-                if(x > pipes[index].pos[0] - dimensions[0]
-                && x < pipes[index].pos[0] + dimensions[0]
-                && y > pipes[index].pos[1] - dimensions[1]
-                && y < pipes[index].pos[1] + dimensions[1])
-                {
-                    game_state = GAME_OVER;
-                }
-            }
+          for (int i = 0; i < pipes_size; ++i)
+          {
+              if(x > pipes[i].pos[0] - dimensions[0]/2
+              && x < pipes[i].pos[0] + dimensions[0]/2
+              && y > pipes[i].pos[1] - dimensions[1]/2
+              && y < pipes[i].pos[1] + dimensions[1]/2)
+              {
+                  game_state = GAME_OVER;
+              }
+          }
 
 
             //Comprobación Game Over
@@ -312,24 +318,9 @@ namespace flappyfish
 
     }
 
-    void Game_Scene::game_over()
-    {
-
-    }
-
     void Game_Scene::draw_slice (Canvas * canvas, const basics::Point2f & where, basics::Atlas & atlas, basics::Id slice_id)
     {
         const Atlas::Slice * slice = atlas.get_slice (slice_id);
-
-//Comprobaciones
-        if (dimensions.coordinates.x() == 0 && slice_id == ID(pipedown))
-        {
-            dimensions = {slice->width, slice->height};
-        }
-        else if(pause_button.size.width == 0 && slice_id == ID(pause_but))
-        {
-            pause_button.size = {slice->width, slice->height};
-        }
 
         if (slice)
         {

@@ -55,6 +55,7 @@ namespace flappyfish
 
         bool hasStartedPlaying;
 
+        bool flying = false;
         Texture_Handle texture;
         Texture_Handle background;
         Atlas_Handle atlas, atlas_menu;
@@ -120,16 +121,14 @@ namespace flappyfish
 
         void load ();
         void run  (float time);
-        void game_over ();
         void draw_slice (basics::Canvas * canvas, const basics::Point2f & where, basics::Atlas & atlas, basics::Id slice_id);
         void add_punctuation();
-        void configure();
         int option_at (const Point2f & point);
 
 
         inline float random_Y_pos (const float previous_Y) ///< Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
         {
-            return std::max(-600.0f, std::min( previous_Y + rand() % 600 + (-300) , 200.0f)); ///< Clamp entre dos valores para que no se salga en Y de la pantalla
+            return std::max(-200.0f, std::min( previous_Y + rand() % 500 + (-350) , 400.0f)); ///< Clamp entre dos valores para que no se salga en Y de la pantalla
         }
     };
 

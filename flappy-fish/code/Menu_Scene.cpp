@@ -191,7 +191,7 @@ namespace flappyfish
         // Se establece la posición del borde superior de cada opción:
         for (unsigned index = 0; index < number_of_options; ++index)
         {
-            options[index].position = Point2f { canvas_width / 2.f, option_top };
+            options[index].position = Point2f { canvas_width / 2.f, option_top - canvas_height*0.1f };
 
             option_top -= options[index].slice->height;
         }
