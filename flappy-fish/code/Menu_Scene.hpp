@@ -18,6 +18,8 @@ namespace flappyfish
     using basics::Atlas;
     using basics::Canvas;
     using basics::Point2f;
+    using basics::Size2f;
+
     using basics::Texture_2D;
     using basics::Graphics_Context;
 
@@ -61,9 +63,16 @@ namespace flappyfish
         unsigned canvas_height;
 
         Option   options[number_of_options];                ///< Datos de las opciones del menú
-        std::unique_ptr< Atlas > atlas;                     ///< Atlas que contiene las imágenes de las opciones del menú
+        std::unique_ptr< Atlas > atlas;
 
 
+        struct Help_Button {
+            Point2f position;
+            Size2f size;
+        };
+        Help_Button help_button;
+
+        bool is_showing_help = true;
     public:
 
         Menu_Scene();

@@ -3,15 +3,17 @@
 <img name="menu-sprites.png" w="1024" h="1024">
   <definitions>
     <dir name="/">
-      <spr name="title" x="0" y="378" w="466" h="242"/>
-      <spr name="pause" x="0" y="0" w="414" h="378"/>
+      <spr name="help" x="0" y="0" w="414" h="378"/>
+      <spr name="help_but" x="828" y="0" w="42" h="65"/>
       <spr name="game_over" x="414" y="0" w="414" h="378"/>
-      <spr name="PLAY" x="466" y="378" w="523" h="116"/>
-      <spr name="QUIT" x="466" y="494" w="523" h="116"/>
-      <spr name="quit_but" x="0" y="620" w="308" h="71"/>
-      <spr name="replay_but" x="0" y="691" w="308" h="71"/>
-      <spr name="continue_but" x="0" y="762" w="308" h="71"/>
-      <spr name="pause_but" x="828" y="0" w="42" h="64"/>
+      <spr name="PLAY" x="0" y="378" w="523" h="116"/>
+      <spr name="QUIT" x="0" y="494" w="523" h="116"/>
+      <spr name="title" x="0" y="610" w="466" h="242"/>
+      <spr name="continue_but" x="523" y="378" w="308" h="71"/>
+      <spr name="quit_but" x="0" y="852" w="308" h="71"/>
+      <spr name="pause" x="523" y="494" w="414" h="378"/>
+      <spr name="replay_but" x="0" y="923" w="308" h="71"/>
+      <spr name="pause_but" x="870" y="0" w="42" h="64"/>
     </dir>
   </definitions>
 </img>

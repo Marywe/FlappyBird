@@ -81,6 +81,10 @@ namespace flappyfish
                 case ID(touch-started):
                 {
                     if(!hasStartedPlaying) hasStartedPlaying = true;
+
+                    if(flying) flying = false;
+                    else flying=true;
+
                     yForce = 5;
                     break;
                 }
@@ -153,7 +157,6 @@ namespace flappyfish
                     canvas->fill_rectangle ({ bgx, bgy },   {background->get_width() , background->get_height() }, background.get ());
                     canvas->fill_rectangle ({ bg2x, bgy },  {background->get_width() , background->get_height() }, background.get ());
                 }
-                if (texture) canvas->fill_rectangle ({ x, y }, { 100, 100 }, texture.get ());
 
                 if(atlas)
                 {
@@ -163,11 +166,18 @@ namespace flappyfish
 
                          if(i < pipes_size / 2)
 
-                             draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
-                         else
                              draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipeup) );
+                         else
+                             draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
 
                     }
+
+                    if(flying)
+                        draw_slice(canvas, {x,y}, *atlas, ID(player.1));
+
+                    else
+                        draw_slice(canvas, {x,y}, *atlas, ID(player.2));
+
                 }
 
                 if(font)
@@ -231,7 +241,7 @@ namespace flappyfish
                 background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
 
                 font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
-                atlas.reset (new Atlas("pipes.sprites", context));
+                atlas.reset (new Atlas("game-assets.sprites", context));
                 atlas_menu.reset (new Atlas("menu-sprites.sprites", context));
 
                 if (texture && background && atlas->good() && font->good() && atlas_menu->good())

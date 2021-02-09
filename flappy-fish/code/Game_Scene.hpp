@@ -56,6 +56,8 @@ namespace flappyfish
         bool hasStartedPlaying;
 
         bool flying = false;
+
+
         Texture_Handle texture;
         Texture_Handle background;
         Atlas_Handle atlas, atlas_menu;

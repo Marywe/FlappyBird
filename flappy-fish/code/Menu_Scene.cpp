@@ -69,17 +69,33 @@ namespace flappyfish
                     // Se "sueltan" todas las opciones:
                     for (auto & option : options) option.is_pressed = false;
 
-                    // Se determina qué opción se ha dejado de tocar la última y se actúa como corresponda:
-                    Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
+                    if(!is_showing_help)
+                    {
+                        // Se determina qué opción se ha dejado de tocar la última y se actúa como corresponda:
+                        Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
 
-                    if (option_at (touch_location) == PLAY)
-                    {
-                        director.run_scene (shared_ptr< Scene >(new Game_Scene));
+                        if (option_at (touch_location) == PLAY)
+                        {
+                            director.run_scene (shared_ptr< Scene >(new Game_Scene));
+                        }
+                        else if (option_at (touch_location) == QUIT)
+                        {
+                            director.stop();
+                        }
+
+                        if(     touch_location[0] > help_button.position[0] - help_button.size[0]  &&
+                                touch_location[0] < help_button.position[0] + help_button.size[0]  &&
+                                touch_location[1] > help_button.position[1] - help_button.size[1] &&
+                                touch_location[1] < help_button.position[1] + help_button.size[1]  )
+                        {
+                           is_showing_help = true;
+                        }
                     }
-                    else if (option_at (touch_location) == QUIT)
-                    {
-                        director.stop();
-                    }
+
+                    else is_showing_help = false;
+
+
+
 
                     break;
                 }
@@ -106,7 +122,11 @@ namespace flappyfish
                     {
                         context->add(background);
                         state = READY;
+
+                        help_button.size = {atlas->get_slice (ID(help_but))->width,
+                                            atlas->get_slice (ID(help_but))->height};
                     }
+                    else state = ERROR;
 
                     // Si el atlas está disponible, se inicializan los datos de las opciones del menú:
 
@@ -140,31 +160,41 @@ namespace flappyfish
                 {
                     canvas->fill_rectangle ({ canvas_width/2, canvas_height/2 },   {background->get_width() , background->get_height() }, background.get ());
 
-                    const Atlas::Slice * slice = atlas->get_slice (ID(title));
-                    canvas->fill_rectangle ({canvas_width/2, canvas_height*0.7f }, { slice->width, slice->height }, slice);
-
-                    // Se dibuja el slice de cada una de las opciones del menú:
-                    for (auto & option : options)
+                    if(atlas)
                     {
-                        canvas->set_transform
-                                (
-                                        scale_then_translate_2d
-                                                (
-                                                        option.is_pressed ? 0.75f : 1.f,              // Escala de la opción
-                                                        { option.position[0], option.position[1] }      // Traslación
-                                                )
-                                );
+                        const Atlas::Slice * slice = atlas->get_slice (ID(title));
+                        canvas->fill_rectangle ({canvas_width/2, canvas_height*0.7f }, { slice->width, slice->height }, slice);
 
-                        canvas->fill_rectangle ({ 0.f, 0.f }, { option.slice->width, option.slice->height }, option.slice, CENTER | TOP);
+                        // Se dibuja el slice de cada una de las opciones del menú:
+                        for (auto & option : options)
+                        {
+                            canvas->set_transform
+                                    (
+                                            scale_then_translate_2d
+                                                    (
+                                                            option.is_pressed ? 0.75f : 1.f,              // Escala de la opción
+                                                            { option.position[0], option.position[1] }      // Traslación
+                                                    )
+                                    );
+
+                            canvas->fill_rectangle ({ 0.f, 0.f }, { option.slice->width, option.slice->height }, option.slice, CENTER | TOP);
+                        }
+                        // Se restablece la transformación aplicada a las opciones para que no afecte a
+                        // dibujos posteriores realizados con el mismo canvas:
+                        canvas->set_transform (Transformation2f());
+
+                        const Atlas::Slice * slice_help = atlas->get_slice (ID(help_but));
+
+                        canvas->fill_rectangle ({canvas_width*0.9, canvas_height*0.1f }, { slice_help->width, slice_help->height }, slice_help);
+
+                        if(is_showing_help)
+                        {
+                            const Atlas::Slice * help = atlas->get_slice (ID(help));
+                            canvas->fill_rectangle ({canvas_width/2, canvas_height*0.4 }, { help->width*1.35f, help->height*1.3f }, help);
+
+                        }
                     }
 
-
-
-
-                    // Se restablece la transformación aplicada a las opciones para que no afecte a
-                    // dibujos posteriores realizados con el mismo canvas:
-
-                    canvas->set_transform (Transformation2f());
                 }
             }
         }
