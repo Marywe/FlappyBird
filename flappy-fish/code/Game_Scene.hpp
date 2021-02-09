@@ -40,9 +40,9 @@ namespace flappyfish
             PAUSED
         };
 
-        enum Option_Id
+        enum Option_Id //Para los botones
         {
-            REPLAY,
+            PLAY,
             QUIT,
         };
 
@@ -53,41 +53,36 @@ namespace flappyfish
         unsigned       canvas_width;
         unsigned       canvas_height;
 
-        bool hasStartedPlaying;
+        bool hasStartedPlaying; //Una vez hagas un tap, comienza el juego
 
-        bool flying = false;
+        bool flying = false; //Te da feedback cuando haces tap, cambia el sprite del pez
 
-
-        Texture_Handle texture;
         Texture_Handle background;
         Atlas_Handle atlas, atlas_menu;
-
-
         Font_Handle font;
         unsigned punctuation;
 
+        float          bgx, bgy, bg2x; //Posiciones del bg
+        float          x, y;           //Posiciones del player
+        float          yForce;         //Impulso
 
-        float          bgx, bgy, bg2x;
-        float          x, y;
-        float          yForce;
-
-        const int BGSPEED = 100;
+        const int BGSPEED = 100;       //Parallax, capa del fondo
         static constexpr float GRAVITY = 9.8f;
 
-        struct Pipes {
+        struct Pipes{
             Point2f pos;
         };
 
         Point2f dimensions = {0,0};
         const int PIPE_SPEED = 200;
-        static constexpr float DISTANCE_UP = 1100;
-        static constexpr float DISTANCE_X = 400;
+        static constexpr float DISTANCE_UP = 1100; //Distancia con la tubería de arriba
+        static constexpr float DISTANCE_X = 400;   //Distancia con la tubería de la derecha
 
         static const unsigned pipes_size = 6;
         Pipes pipes [pipes_size];
 
 
-        struct Option
+        struct Option //Botones en menús
         {
             const Atlas::Slice * slice;
             Point2f position;
@@ -96,7 +91,7 @@ namespace flappyfish
         static const unsigned number_of_options = 2;
         Option   options[number_of_options];                ///< Datos de las opciones del menú
 
-        struct Pause_Button {
+        struct Pause_Button { //Botón pause in game
             Point2f position;
             Size2f size;
         };
@@ -127,10 +122,11 @@ namespace flappyfish
         void add_punctuation();
         int option_at (const Point2f & point);
 
-
-        inline float random_Y_pos (const float previous_Y) ///< Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
+        ///< Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
+        inline float random_Y_pos (const float previous_Y)
         {
-            return std::max(-200.0f, std::min( previous_Y + rand() % 500 + (-350) , 400.0f)); ///< Clamp entre dos valores para que no se salga en Y de la pantalla
+            ///< Clamp entre dos valores para que no se salga en Y de la pantalla
+            return std::max(-200.0f, std::min( previous_Y + rand() % 500 + (-350) , 400.0f));
         }
     };
 

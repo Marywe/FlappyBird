@@ -40,7 +40,6 @@ namespace flappyfish
         {
             PLAY,
             QUIT,
-
         };
 
         Texture_Handle background;
@@ -62,7 +61,7 @@ namespace flappyfish
         unsigned canvas_width;
         unsigned canvas_height;
 
-        Option   options[number_of_options];                ///< Datos de las opciones del menú
+        Option   options[number_of_options];         //Opciones del menú
         std::unique_ptr< Atlas > atlas;
 
 
@@ -76,7 +75,6 @@ namespace flappyfish
     public:
 
         Menu_Scene();
-
 
         basics::Size2u get_view_size () override
         {
@@ -99,17 +97,10 @@ namespace flappyfish
         void update (float time) override;
         void render (Graphics_Context::Accessor & context) override;
 
-        void configure_options ();
-        int option_at (const Point2f & point);
+        void configure_options ();              //Para los botones
+        int option_at (const Point2f & point);  //Te dice qué opción pulsas
 
-        inline void pressed_false()
-        {
-            for (auto & option : options)
-            {
-                option.is_pressed = false;
-            }
-
-        }
+        void pressed_false(); //Para la configuración continua de los botones
     };
 
 }

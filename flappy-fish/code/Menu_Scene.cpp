@@ -67,7 +67,7 @@ namespace flappyfish
                     // Se "sueltan" todas las opciones:
                     for (auto & option : options) option.is_pressed = false;
 
-                    if(!is_showing_help)
+                    if(!is_showing_help) //Si no está la pantalla de ayuda puedes seleccionar los botones
                     {
                         // Se determina qué opción se ha dejado de tocar la última y se actúa como corresponda:
                         Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
@@ -90,10 +90,7 @@ namespace flappyfish
                         }
                     }
 
-                    else is_showing_help = false;
-
-
-
+                    else is_showing_help = false; //Quita la ayuda
 
                     break;
                 }
@@ -115,12 +112,12 @@ namespace flappyfish
                     atlas.reset (new Atlas("menu-sprites.sprites", context));
 
                     // Si el atlas se ha podido cargar el estado es READY y, en otro caso, es ERROR:
-
                     if(atlas->good () && background)
                     {
                         context->add(background);
                         state = READY;
 
+                        //Inicializo tamaños según slice
                         help_button.size = {atlas->get_slice (ID(help_but))->width,
                                             atlas->get_slice (ID(help_but))->height};
                     }
@@ -181,10 +178,11 @@ namespace flappyfish
                         // dibujos posteriores realizados con el mismo canvas:
                         canvas->set_transform (Transformation2f());
 
+                        //Botón de opciones
                         const Atlas::Slice * slice_help = atlas->get_slice (ID(help_but));
                         canvas->fill_rectangle (help_button.position, { slice_help->width, slice_help->height }, slice_help);
 
-                        if(is_showing_help)
+                        if(is_showing_help) //Se pinta la pantalla de ayuda
                         {
                             const Atlas::Slice * help = atlas->get_slice (ID(help));
                             canvas->fill_rectangle ({canvas_width/2, canvas_height*0.4 }, { help->width*1.35f, help->height*1.3f }, help);
@@ -201,7 +199,6 @@ namespace flappyfish
     void Menu_Scene::configure_options ()
     {
         // Se asigna un slice del atlas a cada opción del menú según su ID:
-
         options[PLAY   ].slice = atlas->get_slice (ID(PLAY)   );
         options[QUIT ].slice = atlas->get_slice (ID(QUIT) );
 
@@ -247,6 +244,14 @@ namespace flappyfish
         }
 
         return -1;
+    }
+    void Menu_Scene::pressed_false()
+    {
+        for (auto & option : options)
+        {
+            option.is_pressed = false;
+        }
+
     }
 
 }

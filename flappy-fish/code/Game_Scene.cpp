@@ -42,22 +42,22 @@ namespace flappyfish
         bgy         = 1280.0f/2;
         bg2x        = bgx + 1280;
 
-
+        //Seed para el random
         srand (unsigned(time(nullptr)));
 
-
-
-        //Tuberías
+        //Posición de las tuberías
         pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width), canvas_height/2 - DISTANCE_UP/2};
+
+        //Todas las tuberías de arriba van después de las tuberías de abajo, por lo que
+        // la tubería 0 va con la 3, la 1 con la 4, etc.
         pipes[pipes_size / 2].pos.coordinates.y() += DISTANCE_UP;
 
+        //Las primeras tuberías van al medio, las siguientes en Y aleatorias
         for (unsigned i = 1; i < pipes_size / 2 ; ++i)
         {
             pipes[i].pos         = pipes[i + pipes_size / 2].pos =         {(pipes[i - 1].pos.coordinates.x() + DISTANCE_X), (random_Y_pos(pipes[i - 1].pos.coordinates.y()))};
             pipes[i + pipes_size / 2].pos.coordinates.y() += DISTANCE_UP;
         }
-
-
 
         return true;
     }
@@ -80,10 +80,11 @@ namespace flappyfish
             {
                 case ID(touch-started):
                 {
+                    //Para no empezar nada más se carga
                     if(!hasStartedPlaying) hasStartedPlaying = true;
 
-                    if(flying) flying = false;
-                    else flying=true;
+                    //Animación pez cuando le das al tap para feedback
+                    flying ? flying = false : flying =true;
 
                     yForce = 5;
                     break;
@@ -92,10 +93,10 @@ namespace flappyfish
                 {
                     Point2f touch_location = { *event[ID(x)].as< var::Float > (), *event[ID(y)].as< var::Float > () };
 
-                    if(game_state != PLAYING)
+                    if(game_state != PLAYING) //Opciones de Game Over y Pause
                     {
 
-                        if (option_at (touch_location) == REPLAY && game_state == GAME_OVER)
+                        if (option_at (touch_location) == PLAY && game_state == GAME_OVER)
                         {
                            initialize();
                         }
@@ -103,13 +104,13 @@ namespace flappyfish
                         {
                             director.stop();
                         }
-                        else if (option_at (touch_location) == REPLAY && game_state == PAUSED)
+                        else if (option_at (touch_location) == PLAY && game_state == PAUSED)
                         {
                              game_state = PLAYING;
                         }
                     }
 
-                    else
+                    else //Botón de pause mientras juegas
                     {
                         if(     touch_location[0] > pause_button.position[0] - pause_button.size[0]  &&
                                 touch_location[0] < pause_button.position[0] + pause_button.size[0]  &&
@@ -160,14 +161,15 @@ namespace flappyfish
 
                 if(atlas)
                 {
-
+                    //Dibuja las tuberías
                     for (int i = 0; i < pipes_size; ++i)
                     {
 
-                         if(i < pipes_size / 2)
+                         if(i < pipes_size / 2) //Las primeras son las de abajo
 
                              draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipeup) );
-                         else
+
+                         else //Las de después sus parejas
                              draw_slice (canvas, pipes[i].pos, *atlas, ID(pipes.pipedown) );
 
                     }
@@ -180,20 +182,19 @@ namespace flappyfish
 
                 }
 
-                if(font)
+                if(font) //Muestra puntuación
                 {
                     Text_Layout punctuation_text(*font, to_wstring(punctuation));
                     canvas->draw_text({canvas_width/2, canvas_height*0.95f}, punctuation_text, TOP | CENTER);
                 }
 
-                if (atlas_menu)
+                if (atlas_menu) //Botones y menús según el estado de juego
                 {
-
                     if(game_state == GAME_OVER)
                     {
                         draw_slice(canvas, {canvas_width/2, canvas_height/2}, *atlas_menu, ID(game_over));
 
-                        options[REPLAY   ].slice = atlas_menu->get_slice (ID(replay_but)   );
+                        options[PLAY   ].slice = atlas_menu->get_slice (ID(replay_but)   );
                         options[QUIT ].slice = atlas_menu->get_slice (ID(quit_but) );
 
                         float heigth = 0;
@@ -237,22 +238,23 @@ namespace flappyfish
 
             if (context)
             {
-                texture = Texture_2D::create (ID(test), context, "game-scene/test.png");
                 background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
 
                 font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
                 atlas.reset (new Atlas("game-assets.sprites", context));
                 atlas_menu.reset (new Atlas("menu-sprites.sprites", context));
 
-                if (texture && background && atlas->good() && font->good() && atlas_menu->good())
+                if (background && atlas->good() && font->good() && atlas_menu->good())
                 {
+
+                    //Además de cargar las imágenes, cuando están listas asigno ciertos valores
+                    //según el tamaño de los slices
                     dimensions = {atlas->get_slice (ID(pipes.pipedown))->width,
                                   atlas->get_slice (ID(pipes.pipedown))->height};
 
                     pause_button.size = {atlas_menu->get_slice (ID(pause_but))->width,
                                          atlas_menu->get_slice (ID(pause_but))->height};
 
-                    context->add (texture);
                     context->add(background);
 
                     state = RUNNING;
@@ -263,14 +265,11 @@ namespace flappyfish
 
     void Game_Scene::run (float dT)
     {
-        //configure();
-
         if(game_state == PLAYING)
         {
             //Movimiento en Y del pez con gravedad
             yForce  -= GRAVITY * dT;
             y       += yForce * 1.5f;
-
 
             //Se mueve el fondo poco a poco
             bgx     -= dT*BGSPEED;
@@ -287,11 +286,11 @@ namespace flappyfish
                 pipes[i].pos.coordinates.x() -= dT* PIPE_SPEED;
             }
 
-            //Comprobación salir de la pantalla
+            //Comprobación salir de la pantalla de las tuberías para recolocarlas
             unsigned index = 0;
             for (index = 0; index < pipes_size / 2; ++index)
             {
-                if (pipes[index].pos.coordinates.x() + dimensions.coordinates.x()/2 <= 0) //
+                if (pipes[index].pos.coordinates.x() + dimensions.coordinates.x()/2 <= 0)
                 {
                     unsigned previous_pos = 0;
 
@@ -304,12 +303,14 @@ namespace flappyfish
                     pipes[index].pos.coordinates.y() = random_Y_pos(pipes[previous_pos].pos.coordinates.y());
                     pipes[index + pipes_size / 2].pos.coordinates.y() = pipes[index].pos.coordinates.y() + DISTANCE_UP;
 
+                    //Suma más uno cuando la tubría sale de la pantalla
                     add_punctuation();
                 }
 
             }
 
-
+            //Colisiones con el pez, he decidido dejar un poco de cancha y en vez de chocarte
+            //con un solo píxel contra la tubería, tienes más cancha
           for (int i = 0; i < pipes_size; ++i)
           {
               if(x > pipes[i].pos[0] - dimensions[0]/2
@@ -321,9 +322,8 @@ namespace flappyfish
               }
           }
 
-
-            //Comprobación Game Over
-            if (y < 0) game_state = GAME_OVER;
+            //Comprobación Game Over si te sales de la pantalla
+            if (y < 0 + 50 || y> canvas_height + 50) game_state = GAME_OVER;
         }
 
     }
@@ -346,6 +346,7 @@ namespace flappyfish
 
     int Game_Scene::option_at (const Point2f & point)
     {
+        //Para los botones de Continue, Quit y Replay
         for (int index = 0; index < 2; ++index)
         {
             const Option & option = options[index];
