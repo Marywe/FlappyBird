@@ -79,7 +79,7 @@ namespace flappyfish
         };
 
         Point2f dimensions = {0,0};
-        const int PIPE_SPEED = 130;
+        const int PIPE_SPEED = 200;
         static constexpr float DISTANCE_UP = 1100;
         static constexpr float DISTANCE_X = 400;
 

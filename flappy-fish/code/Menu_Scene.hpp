@@ -72,7 +72,7 @@ namespace flappyfish
         };
         Help_Button help_button;
 
-        bool is_showing_help = true;
+        bool is_showing_help = false;
     public:
 
         Menu_Scene();
@@ -101,6 +101,15 @@ namespace flappyfish
 
         void configure_options ();
         int option_at (const Point2f & point);
+
+        inline void pressed_false()
+        {
+            for (auto & option : options)
+            {
+                option.is_pressed = false;
+            }
+
+        }
     };
 
 }

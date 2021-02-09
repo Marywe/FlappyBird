@@ -48,7 +48,7 @@ namespace flappyfish
 
 
         //Tuberías
-        pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width *3/4), canvas_height/2 - DISTANCE_UP/2};
+        pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width), canvas_height/2 - DISTANCE_UP/2};
         pipes[pipes_size / 2].pos.coordinates.y() += DISTANCE_UP;
 
         for (unsigned i = 1; i < pipes_size / 2 ; ++i)

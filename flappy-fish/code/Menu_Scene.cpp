@@ -29,11 +29,9 @@ namespace flappyfish
 
     bool Menu_Scene::initialize ()
     {
-        for (auto & option : options)
-        {
-            option.is_pressed = false;
-        }
+        pressed_false();
 
+        help_button.position = {canvas_width*0.9, canvas_height*0.1f };
         return true;
     }
 
@@ -184,14 +182,12 @@ namespace flappyfish
                         canvas->set_transform (Transformation2f());
 
                         const Atlas::Slice * slice_help = atlas->get_slice (ID(help_but));
-
-                        canvas->fill_rectangle ({canvas_width*0.9, canvas_height*0.1f }, { slice_help->width, slice_help->height }, slice_help);
+                        canvas->fill_rectangle (help_button.position, { slice_help->width, slice_help->height }, slice_help);
 
                         if(is_showing_help)
                         {
                             const Atlas::Slice * help = atlas->get_slice (ID(help));
                             canvas->fill_rectangle ({canvas_width/2, canvas_height*0.4 }, { help->width*1.35f, help->height*1.3f }, help);
-
                         }
                     }
 
@@ -227,7 +223,7 @@ namespace flappyfish
         }
 
         // Se restablece la presión de cada opción:
-        initialize ();
+        pressed_false();
     }
 
     // ---------------------------------------------------------------------------------------------
