@@ -122,10 +122,10 @@ namespace flappyfish
         void add_punctuation();
         int option_at (const Point2f & point);
 
-        ///< Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
+        // Saca una random Y para las tuberías que se van colocando al final según la posición en Y de la anterior
         inline float random_Y_pos (const float previous_Y)
         {
-            ///< Clamp entre dos valores para que no se salga en Y de la pantalla
+            // Clamp entre dos valores para que no se salga en Y de la pantalla
             return std::max(-200.0f, std::min( previous_Y + rand() % 500 + (-350) , 400.0f));
         }
     };

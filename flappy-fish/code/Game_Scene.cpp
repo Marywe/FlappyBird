@@ -55,7 +55,8 @@ namespace flappyfish
         //Las primeras tuberías van al medio, las siguientes en Y aleatorias
         for (unsigned i = 1; i < pipes_size / 2 ; ++i)
         {
-            pipes[i].pos         = pipes[i + pipes_size / 2].pos =         {(pipes[i - 1].pos.coordinates.x() + DISTANCE_X), (random_Y_pos(pipes[i - 1].pos.coordinates.y()))};
+            pipes[i].pos = pipes[i + pipes_size / 2].pos = {(pipes[i - 1].pos.coordinates.x() + DISTANCE_X),
+                                                            (random_Y_pos(pipes[i - 1].pos.coordinates.y()))};
             pipes[i + pipes_size / 2].pos.coordinates.y() += DISTANCE_UP;
         }
 
@@ -302,11 +303,12 @@ namespace flappyfish
                     else
                         previous_pos = index - 1;
 
-                    pipes[index].pos.coordinates.x() = pipes[index + pipes_size / 2].pos.coordinates.x() = pipes[previous_pos].pos.coordinates.x() + DISTANCE_X;
+                    pipes[index].pos.coordinates.x() = pipes[index + pipes_size / 2].pos.coordinates.x() =
+                                                        pipes[previous_pos].pos.coordinates.x() + DISTANCE_X;
                     pipes[index].pos.coordinates.y() = random_Y_pos(pipes[previous_pos].pos.coordinates.y());
                     pipes[index + pipes_size / 2].pos.coordinates.y() = pipes[index].pos.coordinates.y() + DISTANCE_UP;
 
-                    //Suma más uno cuando la tubría sale de la pantalla
+                    //Suma más uno cuando la tubería sale de la pantalla
                     add_punctuation();
                 }
 

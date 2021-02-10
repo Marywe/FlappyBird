@@ -19,7 +19,6 @@ namespace flappyfish
     using basics::Canvas;
     using basics::Point2f;
     using basics::Size2f;
-
     using basics::Texture_2D;
     using basics::Graphics_Context;
 
