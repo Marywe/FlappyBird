@@ -75,7 +75,7 @@ namespace flappyfish
 
         Point2f dimensions = {0,0};
         const int PIPE_SPEED = 200;
-        static constexpr float DISTANCE_UP = 1100; //Distancia con la tubería de arriba
+        static constexpr float DISTANCE_UP = 1050; //Distancia con la tubería de arriba
         static constexpr float DISTANCE_X = 400;   //Distancia con la tubería de la derecha
 
         static const unsigned pipes_size = 6;

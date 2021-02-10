@@ -46,7 +46,7 @@ namespace flappyfish
         srand (unsigned(time(nullptr)));
 
         //Posición de las tuberías
-        pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width), canvas_height/2 - DISTANCE_UP/2};
+        pipes[0].pos = pipes[pipes_size / 2].pos =      {(canvas_width + 250), canvas_height/2 - DISTANCE_UP/2};
 
         //Todas las tuberías de arriba van después de las tuberías de abajo, por lo que
         // la tubería 0 va con la 3, la 1 con la 4, etc.
@@ -83,10 +83,14 @@ namespace flappyfish
                     //Para no empezar nada más se carga
                     if(!hasStartedPlaying) hasStartedPlaying = true;
 
-                    //Animación pez cuando le das al tap para feedback
-                    flying ? flying = false : flying =true;
+                    //Animación pez cuando le das al tap para feedback e impulso
 
-                    yForce = 5;
+                    if(game_state == PLAYING){
+                        flying ? flying = false : flying = true;
+                        yForce = 5;
+                    }
+
+
                     break;
                 }
                case ID(touch-ended):
@@ -100,7 +104,7 @@ namespace flappyfish
                         {
                            initialize();
                         }
-                        else if (option_at (touch_location) == QUIT)
+                        else if (option_at (touch_location) == QUIT && game_state != PLAYING)
                         {
                             director.stop();
                         }
@@ -119,7 +123,6 @@ namespace flappyfish
                         {
                            game_state = PAUSED;
                         }
-
 
                     }
 
@@ -199,7 +202,7 @@ namespace flappyfish
 
                         float heigth = 0;
 
-                        for (unsigned i = 0; i < 2; ++i)
+                        for (unsigned i = 0; i < number_of_options; ++i)
                         {
                             options[i].position = {canvas_width/2, canvas_height/2 + heigth};
                             canvas->fill_rectangle ({ options[i].position }, { options[i].slice->width, options[i].slice->height }, options[i].slice, CENTER | TOP);
@@ -210,11 +213,11 @@ namespace flappyfish
                     {
                         draw_slice(canvas, {canvas_width/2, canvas_height/2}, *atlas_menu, ID(pause));
 
-                        options[PAUSED   ].slice = atlas_menu->get_slice (ID(continue_but)   );
+                        options[PLAY   ].slice = atlas_menu->get_slice (ID(continue_but)   );
                         options[QUIT ].slice = atlas_menu->get_slice (ID(quit_but) );
 
                         float heigth = 0;
-                        for (unsigned i = 2; i > 0; --i)
+                        for (unsigned i = 0; i < number_of_options; ++i)
                         {
                             options[i].position = {canvas_width/2, canvas_height/2 + heigth};
                             canvas->fill_rectangle ({ options[i].position }, { options[i].slice->width, options[i].slice->height }, options[i].slice, CENTER | TOP);
@@ -238,9 +241,9 @@ namespace flappyfish
 
             if (context)
             {
-                background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
+                background = Texture_2D::create (ID(bg), context, "fondo.png");
 
-                font.reset (new Raster_Font("menu-scene/myfont.fnt", context));
+                font.reset (new Raster_Font("myfont.fnt", context));
                 atlas.reset (new Atlas("game-assets.sprites", context));
                 atlas_menu.reset (new Atlas("menu-sprites.sprites", context));
 

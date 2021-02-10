@@ -108,7 +108,7 @@ namespace flappyfish
 
                 if (context)
                 {
-                    background = Texture_2D::create (ID(bg), context, "game-scene/fondo.png");
+                    background = Texture_2D::create (ID(bg), context, "fondo.png");
                     atlas.reset (new Atlas("menu-sprites.sprites", context));
 
                     // Si el atlas se ha podido cargar el estado es READY y, en otro caso, es ERROR:
